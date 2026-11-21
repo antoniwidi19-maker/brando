@@ -4,202 +4,373 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#03050b">
-  <meta name="description" content="BRANDO — Beyond the ordinary. Explore the future.">
+  <meta name="theme-color" content="#03050a">
+  <meta name="description" content="BRANDO — An immersive interactive universe. Explore worlds beyond the ordinary.">
   <title>BRANDO — Beyond the Ordinary</title>
-  <link rel="stylesheet" href="style.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
 
+  <link rel="stylesheet" href="style.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
   <div class="loader" id="loader">
     <div class="loader-logo">BRANDO<span>.</span></div>
-    <div class="loader-line"><div></div></div>
-    <p>INITIALIZING EXPERIENCE</p>
+    <div class="loader-progress"><span id="loaderBar"></span></div>
+    <p id="loaderText">PREPARING UNIVERSE</p>
   </div>
 
-  <canvas id="stars"></canvas>
+  <div class="cursor-glow" id="cursorGlow"></div>
   <div class="noise"></div>
 
-  <header class="navbar">
-    <a href="#" class="logo">BRANDO<span>.</span></a>
-    <nav class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#explore">Explore</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
+  <header class="header" id="header">
+    <a href="#home" class="brand">BRANDO<span>.</span></a>
+
+    <nav class="nav" id="nav">
+      <a href="#home" class="nav-link active">HOME</a>
+      <a href="#mission" class="nav-link">MISSION</a>
+      <a href="#worlds" class="nav-link">WORLDS</a>
+      <a href="#technology" class="nav-link">TECHNOLOGY</a>
+      <a href="#about" class="nav-link">ABOUT</a>
     </nav>
-    <a href="#contact" class="nav-cta">CONNECT <span>↗</span></a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+
+    <a href="#contact" class="header-contact">
+      CONTACT <span>↗</span>
+    </a>
+
+    <button class="menu-button" id="menuButton" aria-label="Toggle menu">
       <span></span><span></span>
     </button>
   </header>
 
   <main>
+
+    <!-- HERO / 3D EARTH -->
     <section class="hero" id="home">
+      <div id="spaceScene" class="space-scene"></div>
+
+      <div class="hero-vignette"></div>
       <div class="hero-grid"></div>
-      <div class="hero-content">
-        <div class="eyebrow reveal"><span class="status-dot"></span> INDEPENDENT DIGITAL EXPERIENCE</div>
-        <h1 class="hero-title reveal">
+
+      <div class="hero-copy">
+        <div class="eyebrow reveal">
+          <span class="live-dot"></span>
+          INDEPENDENT DIGITAL UNIVERSE
+        </div>
+
+        <h1 class="hero-heading reveal">
           BEYOND<br>
-          THE <span class="outline-text">ORDINARY.</span>
+          THE <span>ORDINARY.</span>
         </h1>
+
         <p class="hero-description reveal">
-          We don't follow the future.<br>
-          We create the space for it.
+          A new perspective on creativity, technology and the universe.
+          Enter a world where imagination has no boundaries.
         </p>
-        <div class="hero-actions reveal">
-          <a href="#explore" class="primary-btn">EXPLORE THE UNKNOWN <span>↗</span></a>
-          <a href="#about" class="text-btn">DISCOVER BRANDO <span>↓</span></a>
+
+        <div class="hero-buttons reveal">
+          <a href="#mission" class="button-primary">
+            EXPLORE THE UNIVERSE <span>↗</span>
+          </a>
+          <a href="#about" class="button-secondary">
+            OUR STORY <span>↓</span>
+          </a>
         </div>
       </div>
 
-      <div class="planet-wrap" id="planetWrap">
-        <div class="planet-orbit orbit-one"></div>
-        <div class="planet-orbit orbit-two"></div>
-        <div class="planet">
-          <div class="planet-texture"></div>
-          <div class="planet-glow"></div>
+      <div class="hero-label label-left">
+        <span>PLANETARY SYSTEM</span>
+        <strong>EARTH / 001</strong>
+        <span>ROTATION ACTIVE</span>
+      </div>
+
+      <div class="hero-label label-right">
+        <span>LIVE COORDINATES</span>
+        <strong id="coordinates">000.00 / 000.00</strong>
+        <span>CAMERA TRACKING ENABLED</span>
+      </div>
+
+      <div class="hero-bottom">
+        <span>DRAG TO ROTATE · MOVE CURSOR TO EXPLORE</span>
+        <div class="scroll-cue">
+          SCROLL TO DESCEND
+          <span class="scroll-arrow">↓</span>
         </div>
-        <div class="planet-ring"></div>
-        <div class="planet-moon"></div>
+        <span>BR — SYSTEM 001</span>
       </div>
 
-      <div class="hero-hud hud-left">
-        <span>SYS / 001</span>
-        <span>ENVIRONMENT</span>
-        <strong>DEEP SPACE</strong>
-      </div>
-      <div class="hero-hud hud-right">
-        <span>POSITION</span>
-        <strong id="coordinates">00.000 / 00.000</strong>
-        <span class="hud-line"></span>
-        <span>VISUAL SYSTEM ACTIVE</span>
-      </div>
-
-      <div class="scroll-indicator">
-        <span>SCROLL TO EXPLORE</span>
-        <div class="scroll-line"></div>
-      </div>
-      <div class="hero-index">01 — 04</div>
-    </section>
-
-    <section class="manifesto section" id="explore">
-      <div class="section-top reveal">
-        <span class="section-label">01 / THE MANIFESTO</span>
-        <span class="section-label">A NEW PERSPECTIVE</span>
-      </div>
-      <h2 class="manifesto-title reveal">
-        THE WORLD IS<br>
-        NOT ENOUGH.<br>
-        <span>GO BEYOND.</span>
-      </h2>
-      <p class="manifesto-copy reveal">
-        There is always another possibility. Another dimension.
-        Another way to think, to build, to create. BRANDO exists
-        for those who refuse to stay inside the boundaries.
-      </p>
-    </section>
-
-    <section class="cards-section section">
-      <div class="section-top reveal">
-        <span class="section-label">02 / OUR UNIVERSE</span>
-        <span class="section-label">SELECT YOUR DIMENSION</span>
-      </div>
-
-      <div class="cards-grid">
-        <a class="feature-card card-01 reveal" href="#about">
-          <div class="card-visual visual-01">
-            <div class="mini-orb orb-a"></div>
-            <div class="mini-orb orb-b"></div>
-            <div class="visual-grid"></div>
-          </div>
-          <div class="card-number">01</div>
-          <div class="card-bottom">
-            <div>
-              <h3>CREATION</h3>
-              <p>Ideas beyond imagination.</p>
-            </div>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <a class="feature-card card-02 reveal" href="#about">
-          <div class="card-visual visual-02">
-            <div class="cube">
-              <div class="cube-face front"></div>
-              <div class="cube-face back"></div>
-              <div class="cube-face left"></div>
-              <div class="cube-face right"></div>
-              <div class="cube-face top"></div>
-              <div class="cube-face bottom"></div>
-            </div>
-            <div class="visual-grid"></div>
-          </div>
-          <div class="card-number">02</div>
-          <div class="card-bottom">
-            <div>
-              <h3>INNOVATION</h3>
-              <p>Designed for tomorrow.</p>
-            </div>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
-
-        <a class="feature-card card-03 reveal" href="#contact">
-          <div class="card-visual visual-03">
-            <div class="portal"></div>
-            <div class="portal-light"></div>
-            <div class="visual-grid"></div>
-          </div>
-          <div class="card-number">03</div>
-          <div class="card-bottom">
-            <div>
-              <h3>EXPLORATION</h3>
-              <p>Into the unknown.</p>
-            </div>
-            <span class="card-arrow">↗</span>
-          </div>
-        </a>
+      <div class="scene-loading" id="sceneLoading">
+        LOADING 3D ENVIRONMENT...
       </div>
     </section>
 
-    <section class="about-section section" id="about">
-      <div class="about-visual reveal">
-        <div class="about-sun"></div>
-        <div class="about-circle"></div>
-        <div class="about-grid"></div>
-        <div class="about-tag">BR / 2026</div>
+    <!-- MISSION -->
+    <section class="mission section" id="mission">
+      <div class="section-heading reveal">
+        <span class="section-index">01 — MISSION</span>
+        <span class="section-note">A DIFFERENT WAY OF SEEING</span>
       </div>
-      <div class="about-content">
-        <span class="section-label reveal">03 / WHO WE ARE</span>
-        <h2 class="reveal">WE THINK<br>IN <span>INFINITE.</span></h2>
+
+      <div class="mission-content">
+        <h2 class="mission-title reveal">
+          THE UNIVERSE<br>
+          IS NOT A <span>LIMIT.</span>
+        </h2>
+
+        <div class="mission-text reveal">
+          <p class="large-text">
+            It is an invitation to discover what lies beyond what we already know.
+          </p>
+          <p>
+            BRANDO was built around the idea that the future is not something
+            we simply wait for. It is something we explore, imagine and shape.
+            Every discovery begins with a question. Every possibility begins
+            with curiosity.
+          </p>
+          <p>
+            From digital environments to new creative perspectives, we look
+            beyond the familiar to uncover ideas that challenge the ordinary.
+            This is a space for exploration, experimentation and the freedom
+            to think differently.
+          </p>
+        </div>
+      </div>
+
+      <div class="mission-stats reveal">
+        <div class="stat">
+          <span class="stat-value">∞</span>
+          <span class="stat-label">POSSIBILITIES</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">01</span>
+          <span class="stat-label">UNIVERSE</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">CURIOSITY</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">UNBOUND</span>
+          <span class="stat-label">PERSPECTIVE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORLDS -->
+    <section class="worlds section" id="worlds">
+      <div class="section-heading reveal">
+        <span class="section-index">02 — WORLDS</span>
+        <span class="section-note">EXPLORE THE DIMENSIONS</span>
+      </div>
+
+      <div class="worlds-intro reveal">
+        <h2>THREE PATHS.<br><span>INFINITE DESTINATIONS.</span></h2>
+        <p>
+          Each dimension represents a different way to explore ideas,
+          challenge conventions and discover new possibilities.
+        </p>
+      </div>
+
+      <div class="world-grid">
+
+        <article class="world-card reveal">
+          <div class="world-art art-creation">
+            <div class="art-stars"></div>
+            <div class="art-planet"></div>
+            <div class="art-orbit"></div>
+            <div class="art-number">01</div>
+          </div>
+          <div class="world-meta">
+            <span>DIMENSION / 001</span>
+            <span>CREATIVE SPACE</span>
+          </div>
+          <h3>CREATION</h3>
+          <p>
+            The birthplace of ideas. A dimension dedicated to imagination,
+            original thinking and the freedom to turn abstract concepts
+            into meaningful experiences.
+          </p>
+          <a href="#contact" class="world-link">EXPLORE THIS DIMENSION <span>↗</span></a>
+        </article>
+
+        <article class="world-card reveal">
+          <div class="world-art art-technology">
+            <div class="art-stars"></div>
+            <div class="tech-core"></div>
+            <div class="tech-ring ring-a"></div>
+            <div class="tech-ring ring-b"></div>
+            <div class="art-number">02</div>
+          </div>
+          <div class="world-meta">
+            <span>DIMENSION / 002</span>
+            <span>TECH SYSTEM</span>
+          </div>
+          <h3>INNOVATION</h3>
+          <p>
+            Where imagination meets engineering. Explore new tools,
+            emerging technology and digital systems designed to expand
+            what humans can create.
+          </p>
+          <a href="#technology" class="world-link">EXPLORE THIS DIMENSION <span>↗</span></a>
+        </article>
+
+        <article class="world-card reveal">
+          <div class="world-art art-exploration">
+            <div class="art-stars"></div>
+            <div class="explore-portal"></div>
+            <div class="portal-core"></div>
+            <div class="art-number">03</div>
+          </div>
+          <div class="world-meta">
+            <span>DIMENSION / 003</span>
+            <span>UNKNOWN TERRITORY</span>
+          </div>
+          <h3>EXPLORATION</h3>
+          <p>
+            A journey into the unknown. Discover unfamiliar perspectives,
+            question existing boundaries and approach the future
+            with an open mind.
+          </p>
+          <a href="#contact" class="world-link">EXPLORE THIS DIMENSION <span>↗</span></a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- TECHNOLOGY -->
+    <section class="technology section" id="technology">
+      <div class="section-heading reveal">
+        <span class="section-index">03 — TECHNOLOGY</span>
+        <span class="section-note">BEHIND THE EXPERIENCE</span>
+      </div>
+
+      <div class="technology-layout">
+        <div class="technology-visual reveal">
+          <div class="tech-grid"></div>
+          <div class="tech-orb">
+            <div class="tech-orb-inner"></div>
+          </div>
+          <div class="tech-circle circle-1"></div>
+          <div class="tech-circle circle-2"></div>
+          <div class="tech-circle circle-3"></div>
+          <div class="tech-cross cross-1"></div>
+          <div class="tech-cross cross-2"></div>
+          <div class="tech-caption">VISUAL ENGINE / BR-03</div>
+        </div>
+
+        <div class="technology-info">
+          <h2 class="reveal">DIGITAL WORLDS.<br><span>REAL INTERACTION.</span></h2>
+          <p class="reveal">
+            Technology is not only a tool for building. It is a medium for
+            creating new experiences. The BRANDO environment combines
+            real-time rendering, responsive motion and layered visuals
+            to transform a simple website into an interactive space.
+          </p>
+
+          <div class="tech-list">
+            <div class="tech-item reveal">
+              <span>01</span>
+              <div>
+                <h4>REAL-TIME 3D</h4>
+                <p>Interactive geometry, lighting and spatial depth rendered in real time.</p>
+              </div>
+            </div>
+            <div class="tech-item reveal">
+              <span>02</span>
+              <div>
+                <h4>GENERATIVE MOTION</h4>
+                <p>Organic movement and smooth transitions that respond to the environment.</p>
+              </div>
+            </div>
+            <div class="tech-item reveal">
+              <span>03</span>
+              <div>
+                <h4>IMMERSIVE INTERFACE</h4>
+                <p>Visual elements designed to create a coherent and engaging digital journey.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about section" id="about">
+      <div class="section-heading reveal">
+        <span class="section-index">04 — ABOUT BRANDO</span>
+        <span class="section-note">AN INDEPENDENT PROJECT</span>
+      </div>
+
+      <div class="about-layout">
+        <div class="about-visual reveal">
+          <div class="about-starfield"></div>
+          <div class="about-planet"></div>
+          <div class="about-ring"></div>
+          <div class="about-crosshair"></div>
+          <span class="about-coordinate">N 42° 09' / E 18° 22'</span>
+        </div>
+
+        <div class="about-copy">
+          <h2 class="reveal">
+            BUILT FOR<br>
+            THE <span>CURIOUS.</span>
+          </h2>
+          <p class="reveal">
+            BRANDO is an independent digital concept exploring the
+            intersection of design, technology and imagination.
+          </p>
+          <p class="reveal">
+            It is a continuously evolving project. A place to experiment
+            with new visual systems, interactive environments and ideas
+            that have yet to find their limits.
+          </p>
+          <p class="reveal">
+            There is no final destination. There is only the next
+            horizon, the next discovery and the next possibility.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact section" id="contact">
+      <div class="contact-background"></div>
+      <div class="contact-content">
+        <span class="section-index reveal">05 — TRANSMISSION</span>
+        <h2 class="reveal">
+          THE NEXT<br>
+          <span>HORIZON</span><br>
+          STARTS HERE.
+        </h2>
         <p class="reveal">
-          BRANDO is an evolving digital universe built around curiosity,
-          creativity, and bold ideas. A space where imagination meets
-          technology and the ordinary becomes something extraordinary.
+          Every journey begins with curiosity.<br>
+          Send a signal. Let's discover what comes next.
         </p>
-        <a href="#contact" class="primary-btn reveal">LET'S CONNECT <span>↗</span></a>
+        <a href="mailto:hello@brando.space" class="contact-button reveal">
+          INITIATE CONTACT <span>↗</span>
+        </a>
       </div>
+      <div class="contact-coordinate">SIGNAL STATUS / READY</div>
     </section>
 
-    <section class="contact-section section" id="contact">
-      <div class="contact-orb"></div>
-      <span class="section-label reveal">04 / OPEN TRANSMISSION</span>
-      <h2 class="contact-title reveal">READY TO<br><span>GO BEYOND?</span></h2>
-      <p class="reveal">Every great journey starts with a signal.</p>
-      <a href="mailto:hello@brando.space" class="contact-link reveal">HELLO@BRANDO.SPACE <span>↗</span></a>
-    </section>
   </main>
 
   <footer class="footer">
-    <a href="#home" class="logo">BRANDO<span>.</span></a>
-    <p>© 2026 BRANDO — BEYOND THE ORDINARY.</p>
-    <a href="#home" class="back-top">BACK TO TOP ↑</a>
+    <a href="#home" class="brand">BRANDO<span>.</span></a>
+    <div class="footer-center">INDEPENDENT DIGITAL UNIVERSE · 2026</div>
+    <a href="#home" class="footer-top">BACK TO TOP ↑</a>
   </footer>
 
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
