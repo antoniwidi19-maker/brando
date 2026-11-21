@@ -60,6 +60,23 @@
       padding: 0 24px;
     }
 
+    /* Animasi muncul saat scroll */
+    section > * {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    section.in > * {
+      opacity: 1;
+      transform: none;
+    }
+
+    section.in > *:nth-child(2) { transition-delay: 0.1s; }
+    section.in > *:nth-child(3) { transition-delay: 0.2s; }
+    section.in > *:nth-child(4) { transition-delay: 0.3s; }
+    section.in > *:nth-child(5) { transition-delay: 0.4s; }
+
     .label {
       font-family: "Courier New", monospace;
       font-size: 12px;
@@ -131,4 +148,685 @@
     }
 
     .stat {
-      border: 1px solid rgba(9
+      border: 1px solid rgba(90, 215, 255, 0.25);
+      background: rgba(90, 215, 255, 0.04);
+      padding: 14px 20px;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+    }
+
+    /* ===== Worlds ===== */
+    .section-worlds {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .section-worlds h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .worlds-intro {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-bottom: 48px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .card {
+      border: 1px solid rgba(90, 215, 255, 0.2);
+      background: rgba(6, 12, 24, 0.6);
+      backdrop-filter: blur(8px);
+      padding: 32px 28px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .card:hover {
+      border-color: rgba(90, 215, 255, 0.6);
+      transform: translateY(-4px);
+    }
+
+    .card .num {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 36px;
+    }
+
+    .card h3 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .card a {
+      margin-top: auto;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ===== Technology ===== */
+    .section-tech {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .section-tech h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .tech-intro {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-bottom: 48px;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .tech-item {
+      border-top: 1px solid rgba(90, 215, 255, 0.3);
+      padding-top: 20px;
+    }
+
+    .tech-item .idx {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .tech-item h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .tech-item p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ===== About ===== */
+    .section-about {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .section-about h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 28px;
+    }
+
+    .section-about p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .coords {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    /* ===== Contact ===== */
+    .section-contact {
+      padding: 120px 24px 80px;
+    }
+
+    .section-contact h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .section-contact .sub {
+      margin-bottom: 36px;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 16px 28px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .signal {
+      margin-top: 36px;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      position: relative;
+      z-index: 5;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      border-top: 1px solid rgba(90, 215, 255, 0.1);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ===== Mobile ===== */
+    @media (max-width: 600px) {
+      .logo { font-size: 12px; }
+      .section-mission,
+      .section-worlds,
+      .section-tech,
+      .section-about,
+      .section-contact { padding: 90px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="scene"></canvas>
+
+  <div class="logo">BRANDO.</div>
+
+  <main>
+    <!-- 00 — HERO -->
+    <section id="hero">
+      <div class="label">// INDEPENDENT DIGITAL UNIVERSE</div>
+      <h1>BEYOND<br>THE ORDINARY.</h1>
+      <p class="sub">
+        A new perspective on creativity, technology and the universe.
+        Enter a world where imagination has no boundaries.
+      </p>
+      <div class="scroll-hint">SCROLL TO DESCEND ↓</div>
+    </section>
+
+    <!-- 01 — MISSION -->
+    <section class="section-mission" id="mission">
+      <div class="label">01 — MISSION / A DIFFERENT WAY OF SEEING</div>
+      <h2>THE UNIVERSE<br>IS NOT A LIMIT.</h2>
+      <p class="lead">
+        It is an invitation to discover what lies beyond what we already know.
+      </p>
+      <p>
+        BRANDO was built around the idea that the future is not something we simply wait for.
+        It is something we explore, imagine and shape. Every discovery begins with a question.
+        Every possibility begins with curiosity.
+      </p>
+      <p>
+        From digital environments to new creative perspectives, we look beyond the familiar
+        to uncover ideas that challenge the ordinary. This is a space for exploration,
+        experimentation and the freedom to think differently.
+      </p>
+
+      <div class="stats">
+        <div class="stat">∞ POSSIBILITIES</div>
+        <div class="stat">01 UNIVERSE</div>
+        <div class="stat">100% CURIOSITY</div>
+        <div class="stat">UNBOUND PERSPECTIVE</div>
+      </div>
+    </section>
+
+    <!-- 02 — WORLDS -->
+    <section class="section-worlds" id="worlds">
+      <div class="label">02 — WORLDS / EXPLORE THE DIMENSIONS</div>
+      <h2>THREE PATHS.<br>INFINITE DESTINATIONS.</h2>
+      <p class="worlds-intro">
+        Each dimension represents a different way to explore ideas, challenge conventions and discover new possibilities.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="num">DIMENSION / 001 — CREATIVE SPACE</div>
+          <h3>CREATION</h3>
+          <p>The birthplace of ideas. A dimension dedicated to imagination, original thinking and the freedom to turn abstract concepts into meaningful experiences.</p>
+          <a href="#contact">EXPLORE THIS DIMENSION ↗</a>
+        </div>
+
+        <div class="card">
+          <div class="num">DIMENSION / 002 — TECH SYSTEM</div>
+          <h3>INNOVATION</h3>
+          <p>Where imagination meets engineering. Explore new tools, emerging technology and digital systems designed to expand what humans can create.</p>
+          <a href="#technology">EXPLORE THIS DIMENSION ↗</a>
+        </div>
+
+        <div class="card">
+          <div class="num">DIMENSION / 003 — UNKNOWN TERRITORY</div>
+          <h3>EXPLORATION</h3>
+          <p>A journey into the unknown. Discover unfamiliar perspectives, question existing boundaries and approach the future with an open mind.</p>
+          <a href="#contact">EXPLORE THIS DIMENSION ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — TECHNOLOGY -->
+    <section class="section-tech" id="technology">
+      <div class="label">03 — TECHNOLOGY / BEHIND THE EXPERIENCE</div>
+      <h2>DIGITAL WORLDS.<br>REAL INTERACTION.</h2>
+      <p class="tech-intro">
+        Technology is not only a tool for building. It is a medium for creating new experiences.
+        The BRANDO environment combines real-time rendering, responsive motion and layered visuals
+        to transform a simple website into an interactive space.
+      </p>
+
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="idx">01</div>
+          <h4>REAL-TIME 3D</h4>
+          <p>Interactive geometry, lighting and spatial depth rendered in real time.</p>
+        </div>
+        <div class="tech-item">
+          <div class="idx">02</div>
+          <h4>GENERATIVE MOTION</h4>
+          <p>Organic movement and smooth transitions that respond to the environment.</p>
+        </div>
+        <div class="tech-item">
+          <div class="idx">03</div>
+          <h4>IMMERSIVE INTERFACE</h4>
+          <p>Visual elements designed to create a coherent and engaging digital journey.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — ABOUT -->
+    <section class="section-about" id="about">
+      <div class="label">04 — ABOUT BRANDO / AN INDEPENDENT PROJECT</div>
+      <div class="coords">N 42° 09' / E 18° 22'</div>
+      <h2>BUILT FOR THE CURIOUS.</h2>
+      <p>
+        BRANDO is an independent digital concept exploring the intersection of design, technology and imagination.
+      </p>
+      <p>
+        It is a continuously evolving project. A place to experiment with new visual systems,
+        interactive environments and ideas that have yet to find their limits.
+      </p>
+      <p>
+        There is no final destination. There is only the next horizon, the next discovery and the next possibility.
+      </p>
+    </section>
+
+    <!-- 05 — CONTACT -->
+    <section class="section-contact" id="contact">
+      <div class="label">05 — TRANSMISSION</div>
+      <h2>THE NEXT HORIZON<br>STARTS HERE.</h2>
+      <p class="sub">
+        Every journey begins with curiosity.<br>
+        Send a signal. Let's discover what comes next.
+      </p>
+      <a class="btn" href="mailto:hello@brando.space">INITIATE CONTACT ↗</a>
+      <div class="signal">SIGNAL STATUS / READY</div>
+    </section>
+  </main>
+
+  <footer>
+    <div>BRANDO.</div>
+    <div>INDEPENDENT DIGITAL UNIVERSE · 2026</div>
+    <a href="#hero">BACK TO TOP ↑</a>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // ===== Renderer, scene, kamera =====
+    const canvas = document.getElementById('scene');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x03050a, 1);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x03050a, 0.02);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 9);
+
+    // ===== Lighting =====
+    scene.add(new THREE.AmbientLight(0x404a66, 0.6));
+    const sun = new THREE.DirectionalLight(0xbfe6ff, 1.2);
+    sun.position.set(5, 3, 5);
+    scene.add(sun);
+
+    // Daftar scene 3D, urutannya sama dengan section di <main>
+    const sceneGroups = [];
+
+    // ===== SCENE 0: HERO — Bumi, satelit, bintang =====
+    const heroGroup = new THREE.Group();
+    scene.add(heroGroup);
+    sceneGroups.push(heroGroup);
+
+    const earthGroup = new THREE.Group();
+    heroGroup.add(earthGroup);
+
+    const earth = new THREE.Mesh(
+      new THREE.SphereGeometry(2.2, 64, 64),
+      new THREE.MeshPhongMaterial({ color: 0x1a4a8a, emissive: 0x06142e, shininess: 25 })
+    );
+    earthGroup.add(earth);
+
+    const atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(2.35, 64, 64),
+      new THREE.MeshBasicMaterial({
+        color: 0x5ad7ff,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    earthGroup.add(atmosphere);
+
+    earthGroup.rotation.z = THREE.MathUtils.degToRad(-18);
+    earthGroup.position.set(0, -2.6, 0);
+
+    const satellite = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(0.4, 0.4, 0.6),
+      new THREE.MeshPhongMaterial({ color: 0xd8dde8, shininess: 80 })
+    );
+    satellite.add(body);
+
+    const panelMat = new THREE.MeshPhongMaterial({ color: 0x1b2a5c, emissive: 0x081028, shininess: 120 });
+    const panelL = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.04, 0.6), panelMat);
+    panelL.position.x = -0.9;
+    const panelR = panelL.clone();
+    panelR.position.x = 0.9;
+    satellite.add(panelL, panelR);
+    heroGroup.add(satellite);
+
+    // ===== SCENE 1: MISSION — Node wireframe berputar =====
+    const missionGroup = new THREE.Group();
+    scene.add(missionGroup);
+    sceneGroups.push(missionGroup);
+
+    const nodeOuter = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(2.2, 1),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, wireframe: true, transparent: true, opacity: 0.6 })
+    );
+    const nodeInner = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.9),
+      new THREE.MeshBasicMaterial({ color: 0xe8f0ff, wireframe: true })
+    );
+    missionGroup.add(nodeOuter, nodeInner);
+    missionGroup.position.set(0, 0, -2);
+
+    // ===== SCENE 2: WORLDS — Menara server dengan sorot cahaya emas =====
+    const worldsGroup = new THREE.Group();
+    scene.add(worldsGroup);
+    sceneGroups.push(worldsGroup);
+
+    const tower = new THREE.Group();
+    const towerMat = new THREE.MeshStandardMaterial({
+      color: 0x1a1d24, metalness: 0.6, roughness: 0.4,
+      emissive: 0xffb300, emissiveIntensity: 0.05
+    });
+    for (let i = 0; i < 6; i++) {
+      const block = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 1.4), towerMat);
+      block.position.y = i * 0.5 - 1.25;
+      tower.add(block);
+    }
+    tower.position.set(0, 0, -1);
+    worldsGroup.add(tower);
+
+    const spot = new THREE.SpotLight(0xffc857, 3, 30, Math.PI / 7, 0.5);
+    spot.position.set(0, 9, 2);
+    spot.target = tower;
+    worldsGroup.add(spot);
+
+    // ===== SCENE 3: TECHNOLOGY — Kartu kaca dengan garis gelombang emas =====
+    const techGroup = new THREE.Group();
+    scene.add(techGroup);
+    sceneGroups.push(techGroup);
+
+    const card = new THREE.Mesh(
+      new THREE.BoxGeometry(3.6, 2.2, 0.05),
+      new THREE.MeshStandardMaterial({
+        color: 0x0c1424, transparent: true, opacity: 0.55,
+        roughness: 0.2, metalness: 0.1
+      })
+    );
+    techGroup.add(card);
+
+    for (let k = 0; k < 3; k++) {
+      const pts = [];
+      for (let x = -1.7; x <= 1.7; x += 0.05) {
+        pts.push(new THREE.Vector3(x, Math.sin(x * 2 + k) * 0.35 + (k - 1) * 0.35, 0.04));
+      }
+      const wave = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(pts),
+        new THREE.LineBasicMaterial({ color: 0xffb13b, transparent: true, opacity: 0.9 })
+      );
+      techGroup.add(wave);
+    }
+    techGroup.position.set(0, 0, -1);
+
+    // ===== SCENE 4: ABOUT — Cincin teal berputar =====
+    const aboutGroup = new THREE.Group();
+    scene.add(aboutGroup);
+    sceneGroups.push(aboutGroup);
+
+    const ring1 = new THREE.Mesh(
+      new THREE.TorusGeometry(2.4, 0.015, 8, 160),
+      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.8 })
+    );
+    const ring2 = new THREE.Mesh(
+      new THREE.TorusGeometry(1.8, 0.015, 8, 160),
+      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.4 })
+    );
+    ring2.rotation.x = Math.PI / 2.4;
+    aboutGroup.add(ring1, ring2);
+    aboutGroup.position.set(0, 0, -2);
+
+    // ===== SCENE 5: CONTACT — Sinyal yang berdenyut =====
+    const contactGroup = new THREE.Group();
+    scene.add(contactGroup);
+    sceneGroups.push(contactGroup);
+
+    const signal = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.4, 2),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, wireframe: true, transparent: true, opacity: 0.5 })
+    );
+    contactGroup.add(signal);
+    contactGroup.position.set(0, 0, -2);
+
+    // Semua scene mulai dari kondisi "mengecil" dan hanya scene aktif yang membesar
+    sceneGroups.forEach(g => {
+      g.scale.setScalar(0.0001);
+      g.visible = false;
+    });
+
+    // ===== Bintang (latar belakang untuk semua scene) =====
+    const starCount = 1500;
+    const starPos = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      starPos[i * 3]     = (Math.random() - 0.5) * 120;
+      starPos[i * 3 + 1] = (Math.random() - 0.5) * 120;
+      starPos[i * 3 + 2] = (Math.random() - 0.5) * 120;
+    }
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    const stars = new THREE.Points(
+      starGeo,
+      new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.8 })
+    );
+    scene.add(stars);
+
+    // ===== Scroll progress & section aktif =====
+    const sectionEls = Array.from(document.querySelectorAll('main > section'));
+    let scrollProgress = 0;
+    let activeIndex = 0;
+
+    function updateScroll() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      scrollProgress = max > 0 ? window.scrollY / max : 0;
+
+      // Cari section yang paling dekat dengan tengah layar
+      const mid = window.innerHeight / 2;
+      let best = 0;
+      let bestDist = Infinity;
+      sectionEls.forEach((el, i) => {
+        const r = el.getBoundingClientRect();
+        const center = r.top + r.height / 2;
+        const dist = Math.abs(center - mid);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      });
+      activeIndex = best;
+    }
+    window.addEventListener('scroll', updateScroll, { passive: true });
+
+    // ===== Animasi muncul saat section masuk layar =====
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('in');
+      });
+    }, { threshold: 0.15 });
+    sectionEls.forEach(el => io.observe(el));
+
+    // ===== Mouse parallax =====
+    let mouseX = 0;
+    let mouseY = 0;
+    window.addEventListener('pointermove', e => {
+      mouseX = e.clientX / window.innerWidth - 0.5;
+      mouseY = e.clientY / window.innerHeight - 0.5;
+    });
+
+    // ===== Resize =====
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ===== Loop animasi =====
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      // Transisi scene: scene aktif membesar, lainnya mengecil
+      sceneGroups.forEach((g, i) => {
+        const target = i === activeIndex ? 1 : 0.0001;
+        const s = THREE.MathUtils.lerp(g.scale.x, target, 0.06);
+        g.scale.setScalar(Math.max(s, 0.0001));
+        g.visible = s > 0.01;
+      });
+
+      // Hero: bumi berputar, satelit mengorbit
+      earth.rotation.y = t * 0.05;
+      const angle = t * 0.25;
+      satellite.position.set(
+        Math.cos(angle) * 3.2,
+        1.2 + Math.sin(angle * 0.5) * 0.3,
+        Math.sin(angle) * 3.2 - 1
+      );
+      satellite.lookAt(earthGroup.position);
+
+      // Mission: node berputar
+      nodeOuter.rotation.y = t * 0.15;
+      nodeOuter.rotation.x = t * 0.08;
+      nodeInner.rotation.y = -t * 0.3;
+
+      // Worlds: menara berputar pelan
+      tower.rotation.y = t * 0.15;
+
+      // Tech: kartu bergoyang pelan
+      techGroup.rotation.y = Math.sin(t * 0.3) * 0.2;
+
+      // About: cincin berputar
+      ring1.rotation.z = t * 0.1;
+      ring2.rotation.z = -t * 0.15;
+
+      // Contact: sinyal berdenyut
+      const pulse = 1 + Math.sin(t * 2) * 0.05;
+      signal.scale.setScalar(pulse);
+      signal.rotation.y = t * 0.1;
+
+      // Bintang berputar pelan
+      stars.rotation.y = t * 0.01;
+
+      // Kamera: turun sesuai scroll + sedikit ikut kursor
+      camera.position.x += (mouseX * 1.2 - camera.position.x) * 0.05;
+      camera.position.y = -scrollProgress * 3 + mouseY * -0.6;
+      camera.position.z = 9 - scrollProgress * 2;
+      camera.lookAt(0, camera.position.y * 0.5, 0);
+
+      renderer.render(scene, camera);
+    }
+
+    updateScroll();
+    animate();
+  </script>
+</body>
+</html>
