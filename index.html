@@ -91,6 +91,53 @@
       letter-spacing: 0.3em;
       color: var(--muted);
     }
+
+    /* ===== Mission section ===== */
+    .section-mission {
+      align-items: flex-start;
+      text-align: left;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 120px 24px;
+    }
+
+    .section-mission h2 {
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 28px;
+      text-shadow: 0 0 30px rgba(90, 215, 255, 0.2);
+    }
+
+    .section-mission p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .section-mission .lead {
+      color: var(--text);
+      font-size: 20px;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .stat {
+      border: 1px solid rgba(90, 215, 255, 0.25);
+      background: rgba(90, 215, 255, 0.04);
+      padding: 14px 20px;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+    }
   </style>
 </head>
 <body>
@@ -110,7 +157,32 @@
       <div class="scroll-hint">SCROLL TO DESCEND ↓</div>
     </section>
 
-    <!-- Section lain nanti ditambah di langkah berikutnya -->
+    <section class="section-mission" id="mission">
+      <div class="label">01 — MISSION / A DIFFERENT WAY OF SEEING</div>
+      <h2>THE UNIVERSE<br>IS NOT A LIMIT.</h2>
+      <p class="lead">
+        It is an invitation to discover what lies beyond what we already know.
+      </p>
+      <p>
+        BRANDO was built around the idea that the future is not something we simply wait for.
+        It is something we explore, imagine and shape. Every discovery begins with a question.
+        Every possibility begins with curiosity.
+      </p>
+      <p>
+        From digital environments to new creative perspectives, we look beyond the familiar
+        to uncover ideas that challenge the ordinary. This is a space for exploration,
+        experimentation and the freedom to think differently.
+      </p>
+
+      <div class="stats">
+        <div class="stat">∞ POSSIBILITIES</div>
+        <div class="stat">01 UNIVERSE</div>
+        <div class="stat">100% CURIOSITY</div>
+        <div class="stat">UNBOUND PERSPECTIVE</div>
+      </div>
+    </section>
+
+    <!-- Spacer agar kamera 3D punya ruang scroll tambahan -->
     <section style="min-height: 100vh;"></section>
   </main>
 
@@ -131,127 +203,4 @@
 
     // ===== Lighting =====
     scene.add(new THREE.AmbientLight(0x404a66, 0.6));
-    const sun = new THREE.DirectionalLight(0xbfe6ff, 1.2);
-    sun.position.set(5, 3, 5);
-    scene.add(sun);
-
-    // ===== Bumi =====
-    const earthGroup = new THREE.Group();
-    scene.add(earthGroup);
-
-    const earth = new THREE.Mesh(
-      new THREE.SphereGeometry(2.2, 64, 64),
-      new THREE.MeshPhongMaterial({
-        color: 0x1a4a8a,
-        emissive: 0x06142e,
-        shininess: 25
-      })
-    );
-    earthGroup.add(earth);
-
-    // Atmosfer (glow biru di luar bumi)
-    const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(2.35, 64, 64),
-      new THREE.MeshBasicMaterial({
-        color: 0x5ad7ff,
-        transparent: true,
-        opacity: 0.12,
-        side: THREE.BackSide,
-        blending: THREE.AdditiveBlending
-      })
-    );
-    earthGroup.add(atmosphere);
-
-    // Bumi sedikit miring
-    earthGroup.rotation.z = THREE.MathUtils.degToRad(-18);
-    earthGroup.position.set(0, -2.6, 0);
-
-    // ===== Satelit =====
-    const satellite = new THREE.Group();
-    const body = new THREE.Mesh(
-      new THREE.BoxGeometry(0.4, 0.4, 0.6),
-      new THREE.MeshPhongMaterial({ color: 0xd8dde8, shininess: 80 })
-    );
-    satellite.add(body);
-
-    const panelMat = new THREE.MeshPhongMaterial({
-      color: 0x1b2a5c,
-      emissive: 0x081028,
-      shininess: 120
-    });
-    const panelL = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.04, 0.6), panelMat);
-    panelL.position.x = -0.9;
-    const panelR = panelL.clone();
-    panelR.position.x = 0.9;
-    satellite.add(panelL, panelR);
-
-    satellite.position.set(1.6, 1.4, 1.2);
-    scene.add(satellite);
-
-    // ===== Bintang =====
-    const starCount = 1500;
-    const starPos = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      starPos[i * 3]     = (Math.random() - 0.5) * 120;
-      starPos[i * 3 + 1] = (Math.random() - 0.5) * 120;
-      starPos[i * 3 + 2] = (Math.random() - 0.5) * 120;
-    }
-    const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-    const stars = new THREE.Points(
-      starGeo,
-      new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.8 })
-    );
-    scene.add(stars);
-
-    // ===== Scroll progress =====
-    let scrollProgress = 0;
-
-    function updateScroll() {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgress = max > 0 ? window.scrollY / max : 0;
-    }
-    window.addEventListener('scroll', updateScroll, { passive: true });
-
-    // ===== Resize =====
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    // ===== Loop animasi =====
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
-
-      // Bumi berputar pelan
-      earth.rotation.y = t * 0.05;
-
-      // Satelit mengorbit bumi
-      const angle = t * 0.25;
-      satellite.position.set(
-        Math.cos(angle) * 3.2,
-        1.2 + Math.sin(angle * 0.5) * 0.3,
-        Math.sin(angle) * 3.2 - 1
-      );
-      satellite.lookAt(earthGroup.position);
-
-      // Kamera turun pelan sesuai scroll
-      camera.position.y = -scrollProgress * 3;
-      camera.position.z = 9 - scrollProgress * 2;
-      camera.lookAt(0, camera.position.y * 0.5, 0);
-
-      // Bintang berputar pelan
-      stars.rotation.y = t * 0.01;
-
-      renderer.render(scene, camera);
-    }
-
-    updateScroll();
-    animate();
-  </script>
-</body>
-</html>
+    const sun = n
