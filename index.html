@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BRANDO — Beyond the Ordinary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -11,13 +14,16 @@
       --bg: #03050a;
       --text: #e8f0ff;
       --accent: #5ad7ff;
-      --muted: rgba(232, 240, 255, 0.78);
+      --muted: rgba(232, 240, 255, 0.8);
+      --font-head: "Orbitron", "Arial Black", sans-serif;
+      --font-body: "Exo 2", "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "Share Tech Mono", "Courier New", monospace;
     }
 
     html, body {
       background: var(--bg);
       color: var(--text);
-      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-family: var(--font-body);
       overflow-x: hidden;
       text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
     }
@@ -55,9 +61,10 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
+      font-family: var(--font-head);
       font-size: 14px;
       letter-spacing: 0.4em;
-      font-weight: 600;
+      font-weight: 700;
       pointer-events: none;
     }
 
@@ -77,36 +84,30 @@
       padding: 0 24px;
     }
 
+    /* Gerakan dan opacity tiap elemen dikontrol JS mengikuti scroll */
     section > * {
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 1.1s ease, transform 1.1s ease;
+      will-change: translate, opacity;
     }
-
-    section.in > * {
-      opacity: 1;
-      transform: none;
-    }
-
-    section.in > *:nth-child(2) { transition-delay: 0.12s; }
-    section.in > *:nth-child(3) { transition-delay: 0.24s; }
-    section.in > *:nth-child(4) { transition-delay: 0.36s; }
-    section.in > *:nth-child(5) { transition-delay: 0.48s; }
 
     .label {
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      letter-spacing: 0.25em;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.22em;
       color: var(--accent);
       margin-bottom: 18px;
     }
 
-    h1 {
-      font-size: clamp(40px, 8vw, 96px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1;
+    h1, h2, h3, h4 {
+      font-family: var(--font-head);
+      font-weight: 900;
+      line-height: 1.05;
       text-shadow: 0 0 40px rgba(90, 215, 255, 0.25), 0 2px 14px rgba(0, 0, 0, 0.85);
+    }
+
+    h1 {
+      font-size: clamp(26px, 7.4vw, 84px);
+      letter-spacing: 0.01em;
+      line-height: 1.1;
     }
 
     .sub {
@@ -114,14 +115,15 @@
       max-width: 520px;
       color: var(--muted);
       font-size: 17px;
-      line-height: 1.6;
+      line-height: 1.7;
+      font-weight: 300;
     }
 
     .scroll-hint {
       position: absolute;
       bottom: 32px;
-      font-family: "Courier New", monospace;
-      font-size: 11px;
+      font-family: var(--font-mono);
+      font-size: 12px;
       letter-spacing: 0.3em;
       color: var(--muted);
     }
@@ -136,24 +138,23 @@
     }
 
     .section-mission h2 {
-      font-size: clamp(32px, 5vw, 64px);
-      font-weight: 700;
-      line-height: 1.05;
+      font-size: clamp(24px, 5.6vw, 52px);
       margin-bottom: 28px;
-      text-shadow: 0 0 30px rgba(90, 215, 255, 0.2), 0 2px 14px rgba(0, 0, 0, 0.85);
     }
 
     .section-mission p {
       max-width: 620px;
       color: var(--muted);
       font-size: 17px;
-      line-height: 1.7;
+      line-height: 1.75;
+      font-weight: 300;
       margin-bottom: 18px;
     }
 
     .section-mission .lead {
       color: var(--text);
       font-size: 20px;
+      font-weight: 400;
     }
 
     .stats {
@@ -167,9 +168,9 @@
       border: 1px solid rgba(90, 215, 255, 0.3);
       background: rgba(3, 5, 10, 0.7);
       padding: 14px 20px;
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      letter-spacing: 0.2em;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.18em;
       color: var(--accent);
     }
 
@@ -183,9 +184,7 @@
     }
 
     .section-worlds h2 {
-      font-size: clamp(32px, 5vw, 60px);
-      font-weight: 700;
-      line-height: 1.05;
+      font-size: clamp(24px, 5.6vw, 52px);
       margin-bottom: 20px;
     }
 
@@ -193,6 +192,7 @@
       color: var(--muted);
       font-size: 17px;
       line-height: 1.7;
+      font-weight: 300;
       max-width: 620px;
       margin-bottom: 48px;
     }
@@ -211,7 +211,7 @@
       min-height: 280px;
       display: flex;
       flex-direction: column;
-      transition: border-color 0.3s, transform 0.3s;
+      transition: border-color 0.4s ease, transform 0.4s ease;
     }
 
     .card:hover {
@@ -220,31 +220,31 @@
     }
 
     .card .num {
-      font-family: "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 12px;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       color: var(--accent);
       margin-bottom: 36px;
     }
 
     .card h3 {
-      font-size: 28px;
-      font-weight: 700;
+      font-size: 22px;
       margin-bottom: 16px;
     }
 
     .card p {
       color: var(--muted);
       font-size: 15px;
-      line-height: 1.6;
+      line-height: 1.7;
+      font-weight: 300;
       margin-bottom: 28px;
     }
 
     .card a {
       margin-top: auto;
-      font-family: "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 12px;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       color: var(--accent);
       text-decoration: none;
     }
@@ -259,9 +259,7 @@
     }
 
     .section-tech h2 {
-      font-size: clamp(32px, 5vw, 60px);
-      font-weight: 700;
-      line-height: 1.05;
+      font-size: clamp(24px, 5.6vw, 52px);
       margin-bottom: 20px;
     }
 
@@ -269,6 +267,7 @@
       color: var(--muted);
       font-size: 17px;
       line-height: 1.7;
+      font-weight: 300;
       max-width: 620px;
       margin-bottom: 48px;
     }
@@ -286,22 +285,22 @@
     }
 
     .tech-item .idx {
-      font-family: "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 12px;
       color: var(--accent);
       margin-bottom: 14px;
     }
 
     .tech-item h4 {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 16px;
       margin-bottom: 10px;
     }
 
     .tech-item p {
       color: var(--muted);
       font-size: 14px;
-      line-height: 1.6;
+      line-height: 1.7;
+      font-weight: 300;
     }
 
     /* ===== About ===== */
@@ -314,23 +313,22 @@
     }
 
     .section-about h2 {
-      font-size: clamp(32px, 5vw, 60px);
-      font-weight: 700;
-      line-height: 1.05;
+      font-size: clamp(24px, 5.6vw, 52px);
       margin-bottom: 28px;
     }
 
     .section-about p {
       color: var(--muted);
       font-size: 17px;
-      line-height: 1.7;
+      line-height: 1.75;
+      font-weight: 300;
       margin-bottom: 18px;
     }
 
     .coords {
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      letter-spacing: 0.2em;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.18em;
       color: var(--accent);
       margin-bottom: 20px;
     }
@@ -341,9 +339,7 @@
     }
 
     .section-contact h2 {
-      font-size: clamp(32px, 5vw, 60px);
-      font-weight: 700;
-      line-height: 1.05;
+      font-size: clamp(24px, 5.6vw, 52px);
       margin-bottom: 20px;
     }
 
@@ -357,11 +353,11 @@
       background: rgba(3, 5, 10, 0.7);
       color: var(--accent);
       padding: 16px 28px;
-      font-family: "Courier New", monospace;
-      font-size: 13px;
-      letter-spacing: 0.2em;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      letter-spacing: 0.18em;
       text-decoration: none;
-      transition: background 0.3s, color 0.3s;
+      transition: background 0.4s ease, color 0.4s ease;
     }
 
     .btn:hover {
@@ -371,9 +367,9 @@
 
     .signal {
       margin-top: 36px;
-      font-family: "Courier New", monospace;
-      font-size: 11px;
-      letter-spacing: 0.25em;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.22em;
       color: var(--muted);
     }
 
@@ -386,9 +382,9 @@
       flex-direction: column;
       gap: 12px;
       align-items: center;
-      font-family: "Courier New", monospace;
-      font-size: 11px;
-      letter-spacing: 0.25em;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.22em;
       color: var(--muted);
       border-top: 1px solid rgba(90, 215, 255, 0.15);
       background: rgba(3, 5, 10, 0.85);
@@ -429,7 +425,7 @@
 
   <main>
     <!-- 00 — HERO -->
-    <section id="hero" class="in">
+    <section id="hero">
       <div class="label">// INDEPENDENT DIGITAL UNIVERSE</div>
       <h1>BEYOND<br>THE ORDINARY.</h1>
       <p class="sub">
@@ -565,27 +561,82 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
     // =====================================================
-    // DETEKSI HP & PENGATURAN RINGAN
+    // DETEKSI HP & PENGATURAN
     // =====================================================
     const isMobile = window.matchMedia('(max-width: 700px)').matches;
-    const FRAME_MS = isMobile ? 1000 / 30 : 0; // HP: 30 fps, desktop: tanpa batas
-
-    const canvas = document.getElementById('bg');
+    const FRAME_MS = isMobile ? 1000 / 30 : 0; // 3D di HP dibatasi 30 fps
+    const hasThree = typeof THREE !== 'undefined';
 
     // =====================================================
-    // SETUP RENDERER (dengan pengaman)
+    // GERAKAN TEKS MENGIKUTI SCROLL (halus)
     // =====================================================
-    let renderer = null;
-    try {
-      renderer = new THREE.WebGLRenderer({
-        canvas,
-        antialias: false,
-        alpha: false,
-        powerPreference: 'low-power'
-      });
-    } catch (e) {
-      renderer = null;
+    const sections = Array.from(document.querySelectorAll('main > section'));
+    let cache = [];
+
+    function measure() {
+      cache = sections.map(el => ({
+        top: el.getBoundingClientRect().top + window.scrollY,
+        h: el.offsetHeight,
+        kids: Array.from(el.children)
+      }));
     }
+    measure();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measure);
+    }
+
+    function smoothstep(a, b, x) {
+      const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
+      return t * t * (3 - 2 * t);
+    }
+
+    // Posisi scroll yang sudah dihaluskan (lerp) supaya gerakan terasa mengalir
+    let smooth = window.scrollY;
+
+    function updateText() {
+      smooth += (window.scrollY - smooth) * 0.085;
+      if (Math.abs(window.scrollY - smooth) < 0.05) smooth = window.scrollY;
+
+      const vh = window.innerHeight;
+      const mid = smooth + vh / 2;
+
+      for (const s of cache) {
+        const center = s.top + s.h / 2;
+        const d = (center - mid) / vh;           // 0 saat section ada di tengah layar
+        const fade = 1 - smoothstep(0.35, 0.95, Math.abs(d));
+
+        s.kids.forEach((k, i) => {
+          const depth = 0.22 * (1 + i * 0.1);     // tiap elemen bergerak sedikit beda
+          const y = -d * vh * depth;
+          k.style.translate = `0px ${y.toFixed(1)}px`;
+          k.style.opacity = fade.toFixed(3);
+        });
+      }
+    }
+
+    window.addEventListener('resize', measure);
+
+    // =====================================================
+    // 3D (opsional: kalau gagal, latar gradasi dipakai)
+    // =====================================================
+    const canvas = document.getElementById('bg');
+    let renderer = null;
+
+    if (hasThree) {
+      try {
+        renderer = new THREE.WebGLRenderer({
+          canvas,
+          antialias: false,
+          alpha: false,
+          powerPreference: 'low-power'
+        });
+      } catch (e) {
+        renderer = null;
+      }
+    }
+
+    let render3D = null;
+    let mouseX = 0, mouseY = 0;
 
     if (!renderer) {
       document.body.classList.add('no-gl');
@@ -594,20 +645,15 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setClearColor(0x03050a, 1);
 
-      canvas.addEventListener('webglcontextlost', (e) => {
+      canvas.addEventListener('webglcontextlost', e => {
         e.preventDefault();
         document.body.classList.add('no-gl');
-        renderer = null;
+        render3D = null;
       }, false);
-    }
 
-    if (renderer) {
-      // =====================================================
-      // SCENE & KAMERA
-      // =====================================================
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-      camera.position.set(0, 0, 8);
+      camera.position.set(0, 0, isMobile ? 9 : 8);
 
       const stage = new THREE.Group();
       scene.add(stage);
@@ -616,8 +662,8 @@
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         if (isMobile) {
-          stage.position.set(0, 1.5, 0);
-          stage.scale.setScalar(0.7);
+          stage.position.set(0, 1.9, 0);
+          stage.scale.setScalar(0.45);
         } else {
           stage.position.set(2.6, 0, 0);
           stage.scale.setScalar(1);
@@ -625,17 +671,14 @@
       }
       layout();
 
-      // =====================================================
-      // LUBANG HITAM (3D sederhana)
-      // =====================================================
-      // Bola hitam sebagai event horizon
+      // Bola hitam (event horizon)
       const core = new THREE.Mesh(
         new THREE.SphereGeometry(1, 40, 28),
         new THREE.MeshBasicMaterial({ color: 0x000000 })
       );
       stage.add(core);
 
-      // Cincin cahaya foton di tepi lubang hitam (berdenyut pelan)
+      // Cincin foton
       const photon = new THREE.Mesh(
         new THREE.TorusGeometry(1.06, 0.03, 8, 96),
         new THREE.MeshBasicMaterial({
@@ -645,7 +688,7 @@
       );
       stage.add(photon);
 
-      // Cahaya yang melengkung di atas lubang hitam (efek lensa)
+      // Cahaya melengkung di atas lubang hitam
       const lensArc = new THREE.Mesh(
         new THREE.TorusGeometry(1.3, 0.035, 8, 64, Math.PI),
         new THREE.MeshBasicMaterial({
@@ -655,7 +698,7 @@
       );
       stage.add(lensArc);
 
-      // Piringan akresi: tiga lapis busur yang berputar dengan kecepatan berbeda
+      // Piringan akresi
       const tilt = new THREE.Group();
       tilt.rotation.x = 1.2;
       stage.add(tilt);
@@ -684,45 +727,61 @@
         diskLayers.push({ spin, speed: def.speed });
       });
 
-      // =====================================================
-      // SATELIT KECIL YANG MENGORBIT
-      // =====================================================
+      // Satelit kecil
       const spark = new THREE.Mesh(
         new THREE.SphereGeometry(0.07, 8, 8),
         new THREE.MeshBasicMaterial({ color: 0xffffff })
       );
       stage.add(spark);
 
-      // =====================================================
-      // BINTANG
-      // =====================================================
-      const starCount = isMobile ? 250 : 500;
-      const starPos = new Float32Array(starCount * 3);
+      // Bintang berkelap-kelip (shader ringan)
+      const starCount = isMobile ? 260 : 520;
+      const sp = new Float32Array(starCount * 3);
+      const sPhase = new Float32Array(starCount);
+      const sSize = new Float32Array(starCount);
       for (let i = 0; i < starCount; i++) {
-        starPos[i * 3]     = (Math.random() - 0.5) * 30;
-        starPos[i * 3 + 1] = (Math.random() - 0.5) * 20;
-        starPos[i * 3 + 2] = -4 - Math.random() * 16;
+        sp[i * 3]     = (Math.random() - 0.5) * 40;
+        sp[i * 3 + 1] = (Math.random() - 0.5) * 26;
+        sp[i * 3 + 2] = -4 - Math.random() * 18;
+        sPhase[i] = Math.random() * Math.PI * 2;
+        sSize[i] = 0.5 + Math.random() * 0.9;
       }
-      const starGeo = new THREE.BufferGeometry();
-      starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-      const stars = new THREE.Points(
-        starGeo,
-        new THREE.PointsMaterial({ color: 0xe8f0ff, size: isMobile ? 0.06 : 0.05, transparent: true, opacity: 0.7 })
-      );
+      const sGeo = new THREE.BufferGeometry();
+      sGeo.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+      sGeo.setAttribute('aPhase', new THREE.BufferAttribute(sPhase, 1));
+      sGeo.setAttribute('aSize', new THREE.BufferAttribute(sSize, 1));
+
+      const starMat = new THREE.ShaderMaterial({
+        uniforms: { uTime: { value: 0 } },
+        vertexShader: `
+          attribute float aPhase;
+          attribute float aSize;
+          uniform float uTime;
+          varying float vTw;
+          void main() {
+            vTw = 0.55 + 0.45 * sin(uTime * 1.6 + aPhase);
+            vec4 mv = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = aSize * (60.0 / -mv.z) * (0.7 + 0.3 * vTw);
+            gl_Position = projectionMatrix * mv;
+          }
+        `,
+        fragmentShader: `
+          varying float vTw;
+          void main() {
+            vec2 c = gl_PointCoord - vec2(0.5);
+            float d = length(c);
+            float a = 1.0 - smoothstep(0.0, 0.5, d);
+            gl_FragColor = vec4(vec3(0.92, 0.95, 1.0), a * vTw * 0.9);
+          }
+        `,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+      });
+
+      const stars = new THREE.Points(sGeo, starMat);
       scene.add(stars);
 
-      // =====================================================
-      // SCROLL, REVEAL, PARALLAX, RESIZE
-      // =====================================================
-      const sectionEls = Array.from(document.querySelectorAll('main > section'));
-      const io = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) e.target.classList.add('in');
-        });
-      }, { threshold: 0.1 });
-      sectionEls.forEach(el => io.observe(el));
-
-      let mouseX = 0, mouseY = 0;
       if (!isMobile) {
         window.addEventListener('pointermove', e => {
           mouseX = e.clientX / window.innerWidth - 0.5;
@@ -735,38 +794,17 @@
         layout();
       });
 
-      // =====================================================
-      // LOOP ANIMASI
-      // =====================================================
-      const clock = new THREE.Clock();
-      let lastFrame = 0;
+      render3D = function (t) {
+        starMat.uniforms.uTime.value = t;
 
-      function frame(now) {
-        requestAnimationFrame(frame);
-        if (!renderer) return;
-        if (FRAME_MS && now - lastFrame < FRAME_MS) return;
-        lastFrame = now;
-
-        const t = clock.getElapsedTime();
-
-        // Piringan berputar dengan kecepatan berbeda
         diskLayers.forEach(d => { d.spin.rotation.z = t * d.speed; });
 
-        // Cincin foton berdenyut halus
-        const pulse = 1 + Math.sin(t * 1.3) * 0.015;
-        photon.scale.setScalar(pulse);
-
-        // Cahaya lensa berkedip pelan
+        photon.scale.setScalar(1 + Math.sin(t * 1.3) * 0.015);
         lensArc.material.opacity = 0.55 + 0.2 * Math.sin(t * 1.7);
 
-        // Satelit mengorbit
         const a = t * 0.5;
         spark.position.set(Math.cos(a) * 3.6, Math.sin(a * 0.4) * 0.8, Math.sin(a) * 3.6);
 
-        // Bintang bergerak sangat pelan
-        stars.rotation.z = t * 0.01;
-
-        // Kamera ikut kursor sedikit (desktop)
         if (!isMobile) {
           camera.position.x += (mouseX * 0.6 - camera.position.x) * 0.03;
           camera.position.y += (-mouseY * 0.4 - camera.position.y) * 0.03;
@@ -774,9 +812,26 @@
         camera.lookAt(stage.position.x * 0.2, stage.position.y * 0.2, 0);
 
         renderer.render(scene, camera);
-      }
-      requestAnimationFrame(frame);
+      };
     }
+
+    // =====================================================
+    // LOOP UTAMA (teks selalu halus, 3D sesuai batas FPS)
+    // =====================================================
+    const clock = hasThree ? new THREE.Clock() : null;
+    let last3D = 0;
+
+    function loop(now) {
+      requestAnimationFrame(loop);
+
+      updateText();
+
+      if (render3D && (!FRAME_MS || now - last3D >= FRAME_MS)) {
+        last3D = now;
+        render3D(clock.getElapsedTime());
+      }
+    }
+    requestAnimationFrame(loop);
   </script>
 </body>
 </html>
