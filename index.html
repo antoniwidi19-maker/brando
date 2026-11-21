@@ -4,275 +4,200 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#030712">
-  <title>ORBITAL — Intelligence Beyond Earth</title>
+  <meta name="theme-color" content="#03050b">
+  <meta name="description" content="BRANDO — Beyond the ordinary. Explore the future.">
+  <title>BRANDO — Beyond the Ordinary</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <canvas id="stars"></canvas>
+  <div class="loader" id="loader">
+    <div class="loader-logo">BRANDO<span>.</span></div>
+    <div class="loader-line"><div></div></div>
+    <p>INITIALIZING EXPERIENCE</p>
+  </div>
 
+  <canvas id="stars"></canvas>
   <div class="noise"></div>
 
   <header class="navbar">
-    <a class="logo" href="#">
-      <span class="logo-icon">◉</span>
-      ORBITAL<span class="logo-light">.</span>
-    </a>
-
+    <a href="#" class="logo">BRANDO<span>.</span></a>
     <nav class="nav-links">
-      <a href="#mission">Mission</a>
-      <a href="#technology">Technology</a>
+      <a href="#home">Home</a>
+      <a href="#explore">Explore</a>
       <a href="#about">About</a>
+      <a href="#contact">Contact</a>
     </nav>
-
-    <a href="#contact" class="nav-button">
-      Explore <span>↗</span>
-    </a>
-
-    <button class="menu-toggle" id="menuToggle">☰</button>
+    <a href="#contact" class="nav-cta">CONNECT <span>↗</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+      <span></span><span></span>
+    </button>
   </header>
 
   <main>
-
-    <!-- HERO -->
-    <section class="hero">
-
+    <section class="hero" id="home">
+      <div class="hero-grid"></div>
       <div class="hero-content">
-
-        <div class="status">
-          <span class="status-dot"></span>
-          NEXT GENERATION SPACE INTELLIGENCE
-        </div>
-
-        <h1>
+        <div class="eyebrow reveal"><span class="status-dot"></span> INDEPENDENT DIGITAL EXPERIENCE</div>
+        <h1 class="hero-title reveal">
           BEYOND<br>
-          <span class="gradient-text">THE ORBIT.</span>
+          THE <span class="outline-text">ORDINARY.</span>
         </h1>
-
-        <p class="hero-description">
-          Exploring the unseen. Connecting intelligence across the universe.
-          We transform orbital data into a new perspective of our world.
+        <p class="hero-description reveal">
+          We don't follow the future.<br>
+          We create the space for it.
         </p>
-
-        <div class="hero-buttons">
-          <a href="#mission" class="primary-button">
-            Discover Our Mission <span>↗</span>
-          </a>
-          <a href="#technology" class="secondary-button">
-            Explore Technology
-          </a>
+        <div class="hero-actions reveal">
+          <a href="#explore" class="primary-btn">EXPLORE THE UNKNOWN <span>↗</span></a>
+          <a href="#about" class="text-btn">DISCOVER BRANDO <span>↓</span></a>
         </div>
-
-        <div class="hero-stats">
-          <div class="stat">
-            <h3>24<span>/7</span></h3>
-            <p>ORBITAL MONITORING</p>
-          </div>
-          <div class="stat">
-            <h3>∞</h3>
-            <p>DATA POSSIBILITIES</p>
-          </div>
-          <div class="stat">
-            <h3>360<span>°</span></h3>
-            <p>GLOBAL PERSPECTIVE</p>
-          </div>
-        </div>
-
       </div>
 
-      <!-- EARTH VISUAL -->
-      <div class="space-visual">
-
-        <div class="visual-label label-top">
-          <span>PLANETARY SYSTEM</span>
-          <span class="label-value">SOL-03 / EARTH</span>
+      <div class="planet-wrap" id="planetWrap">
+        <div class="planet-orbit orbit-one"></div>
+        <div class="planet-orbit orbit-two"></div>
+        <div class="planet">
+          <div class="planet-texture"></div>
+          <div class="planet-glow"></div>
         </div>
+        <div class="planet-ring"></div>
+        <div class="planet-moon"></div>
+      </div>
 
-        <div class="earth-scene" id="earthScene">
-
-          <div class="orbit orbit-1"></div>
-          <div class="orbit orbit-2"></div>
-          <div class="orbit orbit-3"></div>
-
-          <div class="earth">
-            <div class="earth-surface"></div>
-            <div class="earth-clouds"></div>
-            <div class="earth-shade"></div>
-            <div class="earth-glow"></div>
-          </div>
-
-          <div class="satellite satellite-1">
-            <span class="sat-core"></span>
-            <span class="sat-panel left"></span>
-            <span class="sat-panel right"></span>
-          </div>
-
-          <div class="satellite satellite-2">
-            <span class="sat-core"></span>
-            <span class="sat-panel left"></span>
-            <span class="sat-panel right"></span>
-          </div>
-
-          <div class="satellite satellite-3">
-            <span class="sat-core"></span>
-            <span class="sat-panel left"></span>
-            <span class="sat-panel right"></span>
-          </div>
-
-          <div class="radar-ring"></div>
-
-          <div class="coordinate coordinate-1">
-            <span class="coord-dot"></span>
-            <div>
-              <small>ORBITAL POSITION</small>
-              <strong>42.8° N / 71.3° E</strong>
-            </div>
-          </div>
-
-          <div class="coordinate coordinate-2">
-            <span class="coord-dot"></span>
-            <div>
-              <small>LIVE SYSTEM</small>
-              <strong>ALL SYSTEMS NOMINAL</strong>
-            </div>
-          </div>
-
-        </div>
-
-        <div class="visual-label label-bottom">
-          <span>FIG. 01 — EARTH ORBIT</span>
-          <span>EST. 2026</span>
-        </div>
-
+      <div class="hero-hud hud-left">
+        <span>SYS / 001</span>
+        <span>ENVIRONMENT</span>
+        <strong>DEEP SPACE</strong>
+      </div>
+      <div class="hero-hud hud-right">
+        <span>POSITION</span>
+        <strong id="coordinates">00.000 / 00.000</strong>
+        <span class="hud-line"></span>
+        <span>VISUAL SYSTEM ACTIVE</span>
       </div>
 
       <div class="scroll-indicator">
-        <span class="scroll-line"></span>
-        SCROLL TO EXPLORE
+        <span>SCROLL TO EXPLORE</span>
+        <div class="scroll-line"></div>
       </div>
-
+      <div class="hero-index">01 — 04</div>
     </section>
 
-    <!-- MISSION -->
-    <section class="section mission" id="mission">
+    <section class="manifesto section" id="explore">
+      <div class="section-top reveal">
+        <span class="section-label">01 / THE MANIFESTO</span>
+        <span class="section-label">A NEW PERSPECTIVE</span>
+      </div>
+      <h2 class="manifesto-title reveal">
+        THE WORLD IS<br>
+        NOT ENOUGH.<br>
+        <span>GO BEYOND.</span>
+      </h2>
+      <p class="manifesto-copy reveal">
+        There is always another possibility. Another dimension.
+        Another way to think, to build, to create. BRANDO exists
+        for those who refuse to stay inside the boundaries.
+      </p>
+    </section>
 
-      <div class="section-heading">
-        <span class="eyebrow">01 / OUR MISSION</span>
-        <h2>A NEW VIEW<br>OF <span class="gradient-text">OUR WORLD.</span></h2>
+    <section class="cards-section section">
+      <div class="section-top reveal">
+        <span class="section-label">02 / OUR UNIVERSE</span>
+        <span class="section-label">SELECT YOUR DIMENSION</span>
       </div>
 
-      <div class="mission-grid">
-
-        <div class="mission-text">
-          <p>
-            Space is more than a destination. It's a new dimension of
-            information, discovery, and possibility.
-          </p>
-          <p>
-            Orbital intelligence helps us understand the planet from above,
-            uncover patterns, and connect technology with the future of humanity.
-          </p>
-          <a href="#technology" class="text-link">
-            Learn more about our vision <span>↗</span>
-          </a>
-        </div>
-
-        <div class="mission-card">
-          <div class="mission-card-top">
-            <span>ORBITAL INSIGHT</span>
-            <span>01 — 03</span>
+      <div class="cards-grid">
+        <a class="feature-card card-01 reveal" href="#about">
+          <div class="card-visual visual-01">
+            <div class="mini-orb orb-a"></div>
+            <div class="mini-orb orb-b"></div>
+            <div class="visual-grid"></div>
           </div>
-          <div class="mini-orbit">
-            <div class="mini-planet"></div>
-            <div class="mini-ring"></div>
-            <div class="mini-satellite"></div>
+          <div class="card-number">01</div>
+          <div class="card-bottom">
+            <div>
+              <h3>CREATION</h3>
+              <p>Ideas beyond imagination.</p>
+            </div>
+            <span class="card-arrow">↗</span>
           </div>
-          <h3>Intelligence<br>from above.</h3>
-          <p>Turning orbital observation into meaningful insight.</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- TECHNOLOGY -->
-    <section class="section technology" id="technology">
-
-      <div class="section-heading">
-        <span class="eyebrow">02 / TECHNOLOGY</span>
-        <h2>ENGINEERED<br>FOR <span class="gradient-text">INFINITY.</span></h2>
-      </div>
-
-      <div class="technology-grid">
-
-        <article class="tech-card">
-          <span class="tech-number">01</span>
-          <div class="tech-icon">⌁</div>
-          <h3>Orbital Intelligence</h3>
-          <p>Understanding orbital systems and turning complex information into a wider perspective.</p>
-          <span class="tech-arrow">↗</span>
-        </article>
-
-        <article class="tech-card">
-          <span class="tech-number">02</span>
-          <div class="tech-icon">◎</div>
-          <h3>Planetary Systems</h3>
-          <p>Exploring the dynamic relationship between Earth, satellites, and the space environment.</p>
-          <span class="tech-arrow">↗</span>
-        </article>
-
-        <article class="tech-card">
-          <span class="tech-number">03</span>
-          <div class="tech-icon">✳</div>
-          <h3>Future Intelligence</h3>
-          <p>Building a new vision of technology, discovery, and humanity's future beyond Earth.</p>
-          <span class="tech-arrow">↗</span>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section class="section about" id="about">
-      <div class="about-box">
-        <span class="eyebrow">03 / THE BIGGER PICTURE</span>
-        <h2>
-          THE UNIVERSE<br>
-          IS <span class="gradient-text">CALLING.</span>
-        </h2>
-        <p>
-          Every orbit tells a story. Every signal opens a possibility.
-          The next frontier begins with curiosity.
-        </p>
-        <a href="#contact" class="primary-button">
-          Start Exploring <span>↗</span>
         </a>
-        <div class="about-orb"></div>
+
+        <a class="feature-card card-02 reveal" href="#about">
+          <div class="card-visual visual-02">
+            <div class="cube">
+              <div class="cube-face front"></div>
+              <div class="cube-face back"></div>
+              <div class="cube-face left"></div>
+              <div class="cube-face right"></div>
+              <div class="cube-face top"></div>
+              <div class="cube-face bottom"></div>
+            </div>
+            <div class="visual-grid"></div>
+          </div>
+          <div class="card-number">02</div>
+          <div class="card-bottom">
+            <div>
+              <h3>INNOVATION</h3>
+              <p>Designed for tomorrow.</p>
+            </div>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+
+        <a class="feature-card card-03 reveal" href="#contact">
+          <div class="card-visual visual-03">
+            <div class="portal"></div>
+            <div class="portal-light"></div>
+            <div class="visual-grid"></div>
+          </div>
+          <div class="card-number">03</div>
+          <div class="card-bottom">
+            <div>
+              <h3>EXPLORATION</h3>
+              <p>Into the unknown.</p>
+            </div>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section class="section contact" id="contact">
-      <span class="eyebrow">04 / CONNECT</span>
-      <h2>READY FOR<br>THE <span class="gradient-text">UNKNOWN?</span></h2>
-      <p>Explore. Observe. Imagine what's next.</p>
-      <a href="mailto:hello@orbital.space" class="primary-button">
-        Get in touch <span>↗</span>
-      </a>
+    <section class="about-section section" id="about">
+      <div class="about-visual reveal">
+        <div class="about-sun"></div>
+        <div class="about-circle"></div>
+        <div class="about-grid"></div>
+        <div class="about-tag">BR / 2026</div>
+      </div>
+      <div class="about-content">
+        <span class="section-label reveal">03 / WHO WE ARE</span>
+        <h2 class="reveal">WE THINK<br>IN <span>INFINITE.</span></h2>
+        <p class="reveal">
+          BRANDO is an evolving digital universe built around curiosity,
+          creativity, and bold ideas. A space where imagination meets
+          technology and the ordinary becomes something extraordinary.
+        </p>
+        <a href="#contact" class="primary-btn reveal">LET'S CONNECT <span>↗</span></a>
+      </div>
     </section>
 
+    <section class="contact-section section" id="contact">
+      <div class="contact-orb"></div>
+      <span class="section-label reveal">04 / OPEN TRANSMISSION</span>
+      <h2 class="contact-title reveal">READY TO<br><span>GO BEYOND?</span></h2>
+      <p class="reveal">Every great journey starts with a signal.</p>
+      <a href="mailto:hello@brando.space" class="contact-link reveal">HELLO@BRANDO.SPACE <span>↗</span></a>
+    </section>
   </main>
 
   <footer class="footer">
-    <a class="logo" href="#">
-      <span class="logo-icon">◉</span>
-      ORBITAL<span class="logo-light">.</span>
-    </a>
-    <p>© 2026 ORBITAL INTELLIGENCE. ALL RIGHTS RESERVED.</p>
-    <a href="#">BACK TO TOP ↑</a>
+    <a href="#home" class="logo">BRANDO<span>.</span></a>
+    <p>© 2026 BRANDO — BEYOND THE ORDINARY.</p>
+    <a href="#home" class="back-top">BACK TO TOP ↑</a>
   </footer>
 
   <script src="script.js"></script>
