@@ -24,7 +24,7 @@
       overflow-x: hidden;
     }
 
-    /* ===== Latar lubang hitam (CSS saja) ===== */
+    /* ===== Latar lubang hitam (CSS) ===== */
     #space {
       position: fixed;
       inset: 0;
@@ -40,10 +40,6 @@
       width: min(60vmin, 520px);
       height: min(60vmin, 520px);
       transform: translate(-50%, -50%);
-    }
-
-    @media (max-width: 700px) {
-      .bh { left: 50%; top: 36%; width: 80vw; height: 80vw; }
     }
 
     .bh-core {
@@ -74,35 +70,3 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg 20deg,
-        #ffe6fa 40deg,
-        #ff4fd8 90deg,
-        transparent 140deg 210deg,
-        #7a86ff 260deg,
-        transparent 310deg
-      );
-      -webkit-mask: radial-gradient(circle, transparent 0 36%, #000 40% 48%, transparent 50%);
-      mask: radial-gradient(circle, transparent 0 36%, #000 40% 48%, transparent 50%);
-      transform: perspective(700px) rotateX(70deg);
-      animation: spin 18s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: perspective(700px) rotateX(70deg) rotate(0deg); }
-      to   { transform: perspective(700px) rotateX(70deg) rotate(360deg); }
-    }
-
-    /* ===== Bintang (dua lapis, kelap-kelip pelan) ===== */
-    .stars {
-      position: absolute;
-      inset: 0;
-      animation: twinkle 5s ease-in-out infinite;
-    }
-
-    .stars.a {
-      background-image:
-        radial-gradient(1px 1px at 20px 30px, #fff, transparent),
-        radial-gradient(1px 1px at 120px 110px, #cfe9ff, transparent),
-        radi
