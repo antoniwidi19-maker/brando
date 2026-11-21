@@ -3,14 +3,1221 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TEST BRANDO</title>
+  <title>BRANDO — Beyond the Ordinary</title>
   <style>
-    body { background: #03050a; color: #e8f0ff; font-family: Arial, sans-serif; padding: 40px 24px; }
-    h1 { font-size: 40px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #03050a;
+      --text: #e8f0ff;
+      --accent: #5ad7ff;
+      --muted: rgba(232, 240, 255, 0.78);
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      overflow-x: hidden;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
+    }
+
+    #scene {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      display: block;
+      opacity: 0.8;
+    }
+
+    .veil {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at 65% 50%,
+        rgba(3, 5, 10, 0.15) 0%,
+        rgba(3, 5, 10, 0.7) 60%,
+        rgba(3, 5, 10, 0.92) 100%
+      );
+    }
+
+    .logo {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 14px;
+      letter-spacing: 0.4em;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 5;
+    }
+
+    section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    /* Animasi muncul saat scroll */
+    section > * {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 1.1s ease, transform 1.1s ease;
+    }
+
+    section.in > * {
+      opacity: 1;
+      transform: none;
+    }
+
+    section.in > *:nth-child(2) { transition-delay: 0.12s; }
+    section.in > *:nth-child(3) { transition-delay: 0.24s; }
+    section.in > *:nth-child(4) { transition-delay: 0.36s; }
+    section.in > *:nth-child(5) { transition-delay: 0.48s; }
+
+    .label {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(40px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-shadow: 0 0 40px rgba(90, 215, 255, 0.25), 0 2px 14px rgba(0, 0, 0, 0.85);
+    }
+
+    .sub {
+      margin-top: 22px;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+    }
+
+    /* ===== Mission ===== */
+    .section-mission {
+      align-items: flex-start;
+      text-align: left;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 120px 24px;
+    }
+
+    .section-mission h2 {
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 28px;
+      text-shadow: 0 0 30px rgba(90, 215, 255, 0.2), 0 2px 14px rgba(0, 0, 0, 0.85);
+    }
+
+    .section-mission p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .section-mission .lead {
+      color: var(--text);
+      font-size: 20px;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .stat {
+      border: 1px solid rgba(90, 215, 255, 0.3);
+      background: rgba(3, 5, 10, 0.7);
+      padding: 14px 20px;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+    }
+
+    /* ===== Worlds ===== */
+    .section-worlds {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .section-worlds h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .worlds-intro {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-bottom: 48px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .card {
+      border: 1px solid rgba(90, 215, 255, 0.25);
+      background: rgba(6, 12, 24, 0.8);
+      padding: 32px 28px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .card:hover {
+      border-color: rgba(90, 215, 255, 0.6);
+      transform: translateY(-4px);
+    }
+
+    .card .num {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 36px;
+    }
+
+    .card h3 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .card a {
+      margin-top: auto;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ===== Technology ===== */
+    .section-tech {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .section-tech h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .tech-intro {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 620px;
+      margin-bottom: 48px;
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+
+    .tech-item {
+      border-top: 1px solid rgba(90, 215, 255, 0.3);
+      padding-top: 20px;
+    }
+
+    .tech-item .idx {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .tech-item h4 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .tech-item p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ===== About ===== */
+    .section-about {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .section-about h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 28px;
+    }
+
+    .section-about p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .coords {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    /* ===== Contact ===== */
+    .section-contact {
+      padding: 120px 24px 80px;
+    }
+
+    .section-contact h2 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .section-contact .sub {
+      margin-bottom: 36px;
+    }
+
+    .btn {
+      display: inline-block;
+      border: 1px solid var(--accent);
+      background: rgba(3, 5, 10, 0.7);
+      color: var(--accent);
+      padding: 16px 28px;
+      font-family: "Courier New", monospace;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .signal {
+      margin-top: 36px;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      position: relative;
+      z-index: 5;
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      border-top: 1px solid rgba(90, 215, 255, 0.15);
+      background: rgba(3, 5, 10, 0.85);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ===== Mobile ===== */
+    @media (max-width: 600px) {
+      #scene { opacity: 0.45; }
+      .logo { font-size: 12px; }
+      .section-mission,
+      .section-worlds,
+      .section-tech,
+      .section-about,
+      .section-contact { padding: 90px 20px; }
+    }
   </style>
 </head>
 <body>
-  <h1>TEST BERHASIL</h1>
-  <p>Kalau lo bisa baca tulisan ini, HP lo bisa nampilin file dari GitHub Pages.</p>
+
+  <canvas id="scene"></canvas>
+  <div class="veil"></div>
+
+  <div class="logo">BRANDO.</div>
+
+  <main>
+    <!-- 00 — HERO -->
+    <section id="hero" class="in">
+      <div class="label">// INDEPENDENT DIGITAL UNIVERSE</div>
+      <h1>BEYOND<br>THE ORDINARY.</h1>
+      <p class="sub">
+        A new perspective on creativity, technology and the universe.
+        Enter a world where imagination has no boundaries.
+      </p>
+      <div class="scroll-hint">SCROLL TO DESCEND ↓</div>
+    </section>
+
+    <!-- 01 — MISSION -->
+    <section class="section-mission" id="mission">
+      <div class="label">01 — MISSION / A DIFFERENT WAY OF SEEING</div>
+      <h2>THE UNIVERSE<br>IS NOT A LIMIT.</h2>
+      <p class="lead">
+        It is an invitation to discover what lies beyond what we already know.
+      </p>
+      <p>
+        BRANDO was built around the idea that the future is not something we simply wait for.
+        It is something we explore, imagine and shape. Every discovery begins with a question.
+        Every possibility begins with curiosity.
+      </p>
+      <p>
+        From digital environments to new creative perspectives, we look beyond the familiar
+        to uncover ideas that challenge the ordinary. This is a space for exploration,
+        experimentation and the freedom to think differently.
+      </p>
+
+      <div class="stats">
+        <div class="stat">∞ POSSIBILITIES</div>
+        <div class="stat">01 UNIVERSE</div>
+        <div class="stat">100% CURIOSITY</div>
+        <div class="stat">UNBOUND PERSPECTIVE</div>
+      </div>
+    </section>
+
+    <!-- 02 — WORLDS -->
+    <section class="section-worlds" id="worlds">
+      <div class="label">02 — WORLDS / EXPLORE THE DIMENSIONS</div>
+      <h2>THREE PATHS.<br>INFINITE DESTINATIONS.</h2>
+      <p class="worlds-intro">
+        Each dimension represents a different way to explore ideas, challenge conventions and discover new possibilities.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="num">DIMENSION / 001 — CREATIVE SPACE</div>
+          <h3>CREATION</h3>
+          <p>The birthplace of ideas. A dimension dedicated to imagination, original thinking and the freedom to turn abstract concepts into meaningful experiences.</p>
+          <a href="#contact">EXPLORE THIS DIMENSION ↗</a>
+        </div>
+
+        <div class="card">
+          <div class="num">DIMENSION / 002 — TECH SYSTEM</div>
+          <h3>INNOVATION</h3>
+          <p>Where imagination meets engineering. Explore new tools, emerging technology and digital systems designed to expand what humans can create.</p>
+          <a href="#technology">EXPLORE THIS DIMENSION ↗</a>
+        </div>
+
+        <div class="card">
+          <div class="num">DIMENSION / 003 — UNKNOWN TERRITORY</div>
+          <h3>EXPLORATION</h3>
+          <p>A journey into the unknown. Discover unfamiliar perspectives, question existing boundaries and approach the future with an open mind.</p>
+          <a href="#contact">EXPLORE THIS DIMENSION ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — TECHNOLOGY -->
+    <section class="section-tech" id="technology">
+      <div class="label">03 — TECHNOLOGY / BEHIND THE EXPERIENCE</div>
+      <h2>DIGITAL WORLDS.<br>REAL INTERACTION.</h2>
+      <p class="tech-intro">
+        Technology is not only a tool for building. It is a medium for creating new experiences.
+        The BRANDO environment combines real-time rendering, responsive motion and layered visuals
+        to transform a simple website into an interactive space.
+      </p>
+
+      <div class="tech-grid">
+        <div class="tech-item">
+          <div class="idx">01</div>
+          <h4>REAL-TIME 3D</h4>
+          <p>Interactive geometry, lighting and spatial depth rendered in real time.</p>
+        </div>
+        <div class="tech-item">
+          <div class="idx">02</div>
+          <h4>GENERATIVE MOTION</h4>
+          <p>Organic movement and smooth transitions that respond to the environment.</p>
+        </div>
+        <div class="tech-item">
+          <div class="idx">03</div>
+          <h4>IMMERSIVE INTERFACE</h4>
+          <p>Visual elements designed to create a coherent and engaging digital journey.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — ABOUT -->
+    <section class="section-about" id="about">
+      <div class="label">04 — ABOUT BRANDO / AN INDEPENDENT PROJECT</div>
+      <div class="coords">N 42° 09' / E 18° 22'</div>
+      <h2>BUILT FOR THE CURIOUS.</h2>
+      <p>
+        BRANDO is an independent digital concept exploring the intersection of design, technology and imagination.
+      </p>
+      <p>
+        It is a continuously evolving project. A place to experiment with new visual systems,
+        interactive environments and ideas that have yet to find their limits.
+      </p>
+      <p>
+        There is no final destination. There is only the next horizon, the next discovery and the next possibility.
+      </p>
+    </section>
+
+    <!-- 05 — CONTACT -->
+    <section class="section-contact" id="contact">
+      <div class="label">05 — TRANSMISSION</div>
+      <h2>THE NEXT HORIZON<br>STARTS HERE.</h2>
+      <p class="sub">
+        Every journey begins with curiosity.<br>
+        Send a signal. Let's discover what comes next.
+      </p>
+      <a class="btn" href="mailto:hello@brando.space">INITIATE CONTACT ↗</a>
+      <div class="signal">SIGNAL STATUS / READY</div>
+    </section>
+  </main>
+
+  <footer>
+    <div>BRANDO.</div>
+    <div>INDEPENDENT DIGITAL UNIVERSE · 2026</div>
+    <a href="#hero">BACK TO TOP ↑</a>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // =====================================================
+    // DETEKSI HP (supaya render lebih ringan)
+    // =====================================================
+    const isMobile = window.matchMedia('(max-width: 700px)').matches;
+
+    // =====================================================
+    // NOISE PROCEDURAL (untuk tekstur planet & awan)
+    // =====================================================
+    function hash2(x, y) {
+      const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+      return s - Math.floor(s);
+    }
+
+    function vnoiseP(x, y, P) {
+      const xi = Math.floor(x), yi = Math.floor(y);
+      const xf = x - xi, yf = y - yi;
+      const u = xf * xf * (3 - 2 * xf);
+      const v = yf * yf * (3 - 2 * yf);
+      const x0 = ((xi % P) + P) % P;
+      const x1 = (((xi + 1) % P) + P) % P;
+      const a = hash2(x0, yi), b = hash2(x1, yi);
+      const c = hash2(x0, yi + 1), d = hash2(x1, yi + 1);
+      return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+    }
+
+    function fbmP(x, y, P, octaves) {
+      let v = 0, amp = 0.5, f = 1;
+      for (let i = 0; i < octaves; i++) {
+        v += amp * vnoiseP(x * f, y * f, P * f);
+        f *= 2;
+        amp *= 0.5;
+      }
+      return v;
+    }
+
+    // Tekstur dibuat SEKALI dengan resolusi sedang (512x256) supaya tidak bikin HP macet
+    const TEX_W = 512, TEX_H = 256, TEX_OCT = 5;
+    const noiseCache = new Float32Array(TEX_W * TEX_H);
+    for (let y = 0; y < TEX_H; y++) {
+      for (let x = 0; x < TEX_W; x++) {
+        noiseCache[y * TEX_W + x] = fbmP(x / TEX_W * 4, y / TEX_H * 3, 4, TEX_OCT);
+      }
+    }
+
+    function makeEarthTextures() {
+      const colorCanvas = document.createElement('canvas');
+      const bumpCanvas = document.createElement('canvas');
+      colorCanvas.width = bumpCanvas.width = TEX_W;
+      colorCanvas.height = bumpCanvas.height = TEX_H;
+      const cctx = colorCanvas.getContext('2d');
+      const bctx = bumpCanvas.getContext('2d');
+      const cimg = cctx.createImageData(TEX_W, TEX_H);
+      const bimg = bctx.createImageData(TEX_W, TEX_H);
+
+      for (let y = 0; y < TEX_H; y++) {
+        const lat = (y / TEX_H - 0.5) * Math.PI;
+        const polar = Math.pow(Math.abs(Math.sin(lat)), 10);
+        for (let x = 0; x < TEX_W; x++) {
+          const n = noiseCache[y * TEX_W + x];
+          const i = (y * TEX_W + x) * 4;
+          let r, g, b, h;
+
+          if (n > 0.52) {
+            const t = Math.min(1, (n - 0.52) * 4);
+            r = 60 + t * 90; g = 100 - t * 30; b = 55 + t * 30;
+            h = 150 + t * 90;
+          } else {
+            const depth = Math.min(1, (0.52 - n) * 4);
+            r = 12 + (1 - depth) * 16; g = 48 + (1 - depth) * 32; b = 100 + (1 - depth) * 34;
+            h = 30;
+          }
+
+          const ice = Math.min(1, polar * 1.4);
+          r += (215 - r) * ice; g += (222 - g) * ice; b += (230 - b) * ice;
+
+          cimg.data[i] = r; cimg.data[i + 1] = g; cimg.data[i + 2] = b; cimg.data[i + 3] = 255;
+          bimg.data[i] = bimg.data[i + 1] = bimg.data[i + 2] = h; bimg.data[i + 3] = 255;
+        }
+      }
+
+      cctx.putImageData(cimg, 0, 0);
+      bctx.putImageData(bimg, 0, 0);
+
+      return {
+        map: new THREE.CanvasTexture(colorCanvas),
+        bump: new THREE.CanvasTexture(bumpCanvas)
+      };
+    }
+
+    function makeCloudTexture() {
+      const c = document.createElement('canvas');
+      c.width = TEX_W;
+      c.height = TEX_H;
+      const ctx = c.getContext('2d');
+      const img = ctx.createImageData(TEX_W, TEX_H);
+
+      for (let y = 0; y < TEX_H; y++) {
+        for (let x = 0; x < TEX_W; x++) {
+          const n = noiseCache[y * TEX_W + x];
+          const i = (y * TEX_W + x) * 4;
+          const a = Math.min(1, Math.max(0, (n - 0.5) * 3));
+          img.data[i] = 255; img.data[i + 1] = 255; img.data[i + 2] = 255;
+          img.data[i + 3] = a * 255;
+        }
+      }
+
+      ctx.putImageData(img, 0, 0);
+      return new THREE.CanvasTexture(c);
+    }
+
+    // =====================================================
+    // SHADER ATMOSFER
+    // =====================================================
+    const atmoVert = `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const atmoFrag = `
+      varying vec3 vNormal;
+      void main() {
+        float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+        gl_FragColor = vec4(0.25, 0.55, 0.8, 1.0) * intensity * 0.7;
+      }
+    `;
+
+    // =====================================================
+    // SATELIT
+    // =====================================================
+    function buildSatellite() {
+      const g = new THREE.Group();
+
+      const busMat = new THREE.MeshStandardMaterial({ color: 0xa9b1c0, metalness: 0.8, roughness: 0.35 });
+      const frameMat = new THREE.MeshStandardMaterial({ color: 0x8c95a6, metalness: 0.9, roughness: 0.4 });
+      const panelMat = new THREE.MeshStandardMaterial({
+        color: 0x1d3f8a, metalness: 0.6, roughness: 0.25, emissive: 0x06102a
+      });
+
+      g.add(new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.5, 0.8), busMat));
+
+      function makePanel(side) {
+        const pg = new THREE.Group();
+
+        const arm = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.03, 0.05), frameMat);
+        arm.position.x = side * 0.6;
+        pg.add(arm);
+
+        const panel = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.02, 0.8), panelMat);
+        panel.position.x = side * 1.6;
+        pg.add(panel);
+
+        const edges = new THREE.LineSegments(
+          new THREE.EdgesGeometry(new THREE.BoxGeometry(2.0, 0.025, 0.8)),
+          new THREE.LineBasicMaterial({ color: 0x6fa8ff, transparent: true, opacity: 0.4 })
+        );
+        edges.position.copy(panel.position);
+        pg.add(edges);
+
+        for (let i = 1; i <= 3; i++) {
+          const line = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.03, 0.8), frameMat);
+          line.position.set(side * (0.6 + i * 0.5), 0, 0);
+          pg.add(line);
+        }
+
+        return pg;
+      }
+
+      g.add(makePanel(-1), makePanel(1));
+
+      const dishMat = frameMat.clone();
+      dishMat.side = THREE.DoubleSide;
+      const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.25, 0.18, 16, 1, true), dishMat);
+      dish.position.set(0, 0.42, 0.25);
+      dish.rotation.x = -0.5;
+      g.add(dish);
+
+      const led = new THREE.Mesh(
+        new THREE.SphereGeometry(0.03, 8, 8),
+        new THREE.MeshBasicMaterial({ color: 0xff3b3b })
+      );
+      led.position.set(0, 0.26, -0.42);
+      g.add(led);
+
+      g.userData.led = led;
+      g.scale.setScalar(0.9);
+      return g;
+    }
+
+    // =====================================================
+    // RENDERER, SCENE, KAMERA
+    // =====================================================
+    const canvas = document.getElementById('scene');
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: !isMobile,
+      alpha: false,
+      powerPreference: 'low-power'
+    });
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x03050a, 1);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.8;
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x03050a, 0.015);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
+    camera.position.set(0, 0, 9);
+
+    // Semua objek 3D dikumpulkan di stage, digeser ke kanan di layar lebar
+    const stage = new THREE.Group();
+    scene.add(stage);
+
+    function layoutStage() {
+      stage.position.x = window.innerWidth > 900 ? 2.8 : 0;
+    }
+    layoutStage();
+
+    scene.add(new THREE.AmbientLight(0x3a4a70, 0.3));
+
+    const sun = new THREE.DirectionalLight(0xfff1dc, 1.2);
+    sun.position.set(-6, 2.5, 4);
+    scene.add(sun);
+
+    const rim = new THREE.DirectionalLight(0x5ad7ff, 0.35);
+    rim.position.set(6, -2, -4);
+    scene.add(rim);
+
+    const sceneGroups = [];
+    const SEG = isMobile ? 48 : 96;
+
+    // =====================================================
+    // SCENE 0: HERO — Planet, awan, atmosfer, satelit
+    // =====================================================
+    const heroGroup = new THREE.Group();
+    stage.add(heroGroup);
+    sceneGroups.push(heroGroup);
+
+    const { map: earthMap, bump: earthBump } = makeEarthTextures();
+    const cloudMap = makeCloudTexture();
+
+    const earthGroup = new THREE.Group();
+    earthGroup.position.set(0, -2.8, -1);
+    earthGroup.rotation.z = -0.41;
+    heroGroup.add(earthGroup);
+
+    const earth = new THREE.Mesh(
+      new THREE.SphereGeometry(2.2, SEG, SEG),
+      new THREE.MeshStandardMaterial({
+        map: earthMap,
+        color: 0x8a8f9a,
+        bumpMap: earthBump,
+        bumpScale: 0.04,
+        roughness: 0.85,
+        metalness: 0
+      })
+    );
+    earthGroup.add(earth);
+
+    const clouds = new THREE.Mesh(
+      new THREE.SphereGeometry(2.26, SEG, SEG),
+      new THREE.MeshStandardMaterial({
+        map: cloudMap,
+        color: 0x9aa0aa,
+        transparent: true,
+        opacity: 0.7,
+        depthWrite: false,
+        roughness: 1
+      })
+    );
+    earthGroup.add(clouds);
+
+    const atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(2.5, SEG, SEG),
+      new THREE.ShaderMaterial({
+        vertexShader: atmoVert,
+        fragmentShader: atmoFrag,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
+        transparent: true,
+        depthWrite: false
+      })
+    );
+    earthGroup.add(atmosphere);
+
+    const ORBIT_R = 3.5;
+    const orbitGroup = new THREE.Group();
+    orbitGroup.position.copy(earthGroup.position);
+    orbitGroup.rotation.set(0.35, 0, 0.3);
+    heroGroup.add(orbitGroup);
+
+    const orbitRing = new THREE.Mesh(
+      new THREE.RingGeometry(ORBIT_R - 0.008, ORBIT_R + 0.008, 192),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.12, side: THREE.DoubleSide })
+    );
+    orbitRing.rotation.x = Math.PI / 2;
+    orbitGroup.add(orbitRing);
+
+    const satellite = buildSatellite();
+    orbitGroup.add(satellite);
+
+    // =====================================================
+    // SCENE 1: MISSION — Node wireframe + inti
+    // =====================================================
+    const missionGroup = new THREE.Group();
+    missionGroup.position.set(0, 0, -2);
+    stage.add(missionGroup);
+    sceneGroups.push(missionGroup);
+
+    const nodeOuter = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(2.2, 1),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, wireframe: true, transparent: true, opacity: 0.35 })
+    );
+    const nodeInner = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.9),
+      new THREE.MeshBasicMaterial({ color: 0xe8f0ff, wireframe: true, transparent: true, opacity: 0.6 })
+    );
+    const core = new THREE.Mesh(
+      new THREE.SphereGeometry(0.45, 24, 24),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.6 })
+    );
+    const halo = new THREE.Mesh(
+      new THREE.SphereGeometry(1.3, 24, 24),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.05, depthWrite: false })
+    );
+    missionGroup.add(nodeOuter, nodeInner, core, halo);
+
+    const missionRing = new THREE.Mesh(
+      new THREE.TorusGeometry(3, 0.01, 8, 160),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.3 })
+    );
+    missionRing.rotation.x = 1.2;
+    missionGroup.add(missionRing);
+
+    const missionDot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.07, 10, 10),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    missionRing.add(missionDot);
+
+    // =====================================================
+    // SCENE 2: WORLDS — Menara server + sorot cahaya
+    // =====================================================
+    const worldsGroup = new THREE.Group();
+    worldsGroup.position.set(0, 0, -1);
+    stage.add(worldsGroup);
+    sceneGroups.push(worldsGroup);
+
+    const tower = new THREE.Group();
+    worldsGroup.add(tower);
+
+    const rackMat = new THREE.MeshStandardMaterial({ color: 0x1a1d24, metalness: 0.7, roughness: 0.35 });
+    const leds = [];
+    for (let i = 0; i < 6; i++) {
+      const block = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.38, 1.6), rackMat);
+      block.position.y = i * 0.5 - 1.25;
+      tower.add(block);
+
+      for (let j = 0; j < 4; j++) {
+        const led = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 0.05, 0.02),
+          new THREE.MeshBasicMaterial({ color: 0xffc857, transparent: true, opacity: 0.7 })
+        );
+        led.position.set(-0.5 + j * 0.33, i * 0.5 - 1.15, 0.81);
+        tower.add(led);
+        leds.push(led);
+      }
+    }
+
+    const groundGlow = new THREE.Mesh(
+      new THREE.CircleGeometry(3, 48),
+      new THREE.MeshBasicMaterial({ color: 0xffc857, transparent: true, opacity: 0.04, depthWrite: false })
+    );
+    groundGlow.rotation.x = -Math.PI / 2;
+    groundGlow.position.y = -1.6;
+    worldsGroup.add(groundGlow);
+
+    const spot = new THREE.SpotLight(0xffc857, 3, 40, Math.PI / 7, 0.5, 1.2);
+    spot.position.set(0, 9, 3);
+    spot.target = tower;
+    worldsGroup.add(spot);
+
+    // =====================================================
+    // SCENE 3: TECHNOLOGY — Kartu kaca + gelombang
+    // =====================================================
+    const techGroup = new THREE.Group();
+    techGroup.position.set(0, 0, -1);
+    stage.add(techGroup);
+    sceneGroups.push(techGroup);
+
+    const cardGeo = new THREE.BoxGeometry(3.6, 2.2, 0.05);
+    const card3D = new THREE.Mesh(
+      cardGeo,
+      new THREE.MeshStandardMaterial({ color: 0x0c1424, transparent: true, opacity: 0.5, roughness: 0.2, metalness: 0.2 })
+    );
+    techGroup.add(card3D);
+
+    const cardEdges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(cardGeo),
+      new THREE.LineBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.35 })
+    );
+    techGroup.add(cardEdges);
+
+    const waves = [];
+    for (let k = 0; k < 3; k++) {
+      const N = 80;
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(N * 3), 3));
+      const line = new THREE.Line(
+        geo,
+        new THREE.LineBasicMaterial({ color: 0xffb13b, transparent: true, opacity: 0.6 })
+      );
+      techGroup.add(line);
+      waves.push({ geo, k, N });
+    }
+
+    const floatShape = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.35),
+      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, wireframe: true, transparent: true, opacity: 0.6 })
+    );
+    floatShape.position.set(2.6, 1.4, 0.6);
+    techGroup.add(floatShape);
+
+    // =====================================================
+    // SCENE 4: ABOUT — Cincin teal + titik orbit
+    // =====================================================
+    const aboutGroup = new THREE.Group();
+    aboutGroup.position.set(0, 0, -2);
+    stage.add(aboutGroup);
+    sceneGroups.push(aboutGroup);
+
+    const ring1 = new THREE.Mesh(
+      new THREE.TorusGeometry(2.4, 0.015, 8, 160),
+      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.5 })
+    );
+    ring1.rotation.x = 1.1;
+    aboutGroup.add(ring1);
+
+    const ring2 = new THREE.Mesh(
+      new THREE.TorusGeometry(1.8, 0.015, 8, 160),
+      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.25 })
+    );
+    ring2.rotation.x = Math.PI / 2.4;
+    aboutGroup.add(ring2);
+
+    const aboutDots = [];
+    for (let i = 0; i < 3; i++) {
+      const dot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.07, 10, 10),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7 })
+      );
+      ring1.add(dot);
+      aboutDots.push(dot);
+    }
+
+    // =====================================================
+    // SCENE 5: CONTACT — Sinyal + riak lembut
+    // =====================================================
+    const contactGroup = new THREE.Group();
+    contactGroup.position.set(0, 0, -2);
+    stage.add(contactGroup);
+    sceneGroups.push(contactGroup);
+
+    const signal = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.4, 1),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, wireframe: true, transparent: true, opacity: 0.3 })
+    );
+    contactGroup.add(signal);
+
+    const ripples = [];
+    for (let i = 0; i < 3; i++) {
+      const r = new THREE.Mesh(
+        new THREE.RingGeometry(1.6, 1.63, 96),
+        new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide })
+      );
+      contactGroup.add(r);
+      ripples.push(r);
+    }
+
+    sceneGroups.forEach(g => {
+      g.scale.setScalar(0.0001);
+      g.visible = false;
+    });
+
+    // =====================================================
+    // BINTANG (dua lapisan, lebih sedikit di HP)
+    // =====================================================
+    function makeStars(count, spread, color, size, opacity) {
+      const pos = new Float32Array(count * 3);
+      for (let i = 0; i < count * 3; i++) {
+        pos[i] = (Math.random() - 0.5) * spread;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      return new THREE.Points(
+        geo,
+        new THREE.PointsMaterial({ color, size, transparent: true, opacity, fog: false })
+      );
+    }
+
+    const starsFar = makeStars(isMobile ? 500 : 1400, 160, 0xffffff, 0.08, 0.6);
+    const starsNear = makeStars(isMobile ? 120 : 400, 60, 0x9fdfff, 0.12, 0.5);
+    scene.add(starsFar, starsNear);
+
+    // =====================================================
+    // SCROLL, SECTION AKTIF, REVEAL
+    // =====================================================
+    const sectionEls = Array.from(document.querySelectorAll('main > section'));
+    let scrollTarget = 0;
+    let scrollCurrent = 0;
+    let activeIndex = 0;
+
+    function updateScroll() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      scrollTarget = max > 0 ? window.scrollY / max : 0;
+
+      const mid = window.innerHeight / 2;
+      let best = 0;
+      let bestDist = Infinity;
+      sectionEls.forEach((el, i) => {
+        const r = el.getBoundingClientRect();
+        const dist = Math.abs(r.top + r.height / 2 - mid);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      });
+      activeIndex = Math.min(best, sceneGroups.length - 1);
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('in');
+      });
+    }, { threshold: 0.1 });
+    sectionEls.forEach(el => io.observe(el));
+
+    // =====================================================
+    // MOUSE PARALLAX (hanya di desktop)
+    // =====================================================
+    let mouseX = 0;
+    let mouseY = 0;
+    if (!isMobile) {
+      window.addEventListener('pointermove', e => {
+        mouseX = e.clientX / window.innerWidth - 0.5;
+        mouseY = e.clientY / window.innerHeight - 0.5;
+      });
+    }
+
+    // =====================================================
+    // RESIZE
+    // =====================================================
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      layoutStage();
+    });
+
+    // =====================================================
+    // LOOP ANIMASI
+    // =====================================================
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      scrollCurrent += (scrollTarget - scrollCurrent) * 0.05;
+
+      sceneGroups.forEach((g, i) => {
+        const target = i === activeIndex ? 1 : 0.0001;
+        const s = THREE.MathUtils.lerp(g.scale.x, target, 0.025);
+        g.scale.setScalar(Math.max(s, 0.0001));
+        g.visible = s > 0.01;
+      });
+
+      // HERO
+      earth.rotation.y = t * 0.02;
+      clouds.rotation.y = t * 0.03;
+
+      const a = t * 0.12;
+      satellite.position.set(Math.cos(a) * ORBIT_R, 0, Math.sin(a) * ORBIT_R);
+      satellite.rotation.y = -a;
+      satellite.userData.led.visible = Math.sin(t * 2) > 0.3;
+
+      // MISSION
+      nodeOuter.rotation.y = t * 0.08;
+      nodeOuter.rotation.x = t * 0.04;
+      nodeInner.rotation.y = -t * 0.15;
+      core.scale.setScalar(1 + Math.sin(t * 1.2) * 0.04);
+      missionRing.rotation.z = t * 0.05;
+      missionDot.position.set(Math.cos(t * 0.3) * 3, Math.sin(t * 0.3) * 3, 0);
+
+      // WORLDS
+      tower.rotation.y = t * 0.06;
+      leds.forEach((led, idx) => {
+        led.material.opacity = 0.4 + 0.3 * (0.5 + 0.5 * Math.sin(t * 1.5 + idx * 0.7));
+      });
+
+      // TECH
+      techGroup.rotation.y = Math.sin(t * 0.15) * 0.15;
+      waves.forEach(w => {
+        const pos = w.geo.attributes.position.array;
+        for (let i = 0; i < w.N; i++) {
+          const x = -1.7 + i * (3.4 / (w.N - 1));
+          pos[i * 3] = x;
+          pos[i * 3 + 1] = Math.sin(x * 2 + t * 0.8 + w.k) * 0.3 + (w.k - 1) * 0.35;
+          pos[i * 3 + 2] = 0.04;
+        }
+        w.geo.attributes.position.needsUpdate = true;
+      });
+      floatShape.rotation.x = t * 0.2;
+      floatShape.rotation.y = t * 0.3;
+
+      // ABOUT
+      aboutGroup.rotation.y = t * 0.05;
+      ring1.rotation.z = t * 0.06;
+      ring2.rotation.z = -t * 0.08;
+      aboutDots.forEach((dot, i) => {
+        const ang = t * 0.3 + i * ((Math.PI * 2) / 3);
+        dot.position.set(Math.cos(ang) * 2.4, Math.sin(ang) * 2.4, 0);
+      });
+
+      // CONTACT
+      signal.rotation.y = t * 0.05;
+      signal.scale.setScalar(1 + Math.sin(t * 1.2) * 0.03);
+      ripples.forEach((r, i) => {
+        const p = (t * 0.2 + i / ripples.length) % 1;
+        r.scale.setScalar(1 + p * 3);
+        r.material.opacity = (1 - p) * 0.3;
+      });
+
+      starsFar.rotation.y = t * 0.005;
+      starsNear.rotation.y = t * 0.01;
+
+      // KAMERA
+      const targetX = mouseX * 0.6;
+      const targetY = -scrollCurrent * 3 + mouseY * -0.4;
+      const targetZ = 9 - scrollCurrent * 2;
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.03);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.05);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.05);
+      camera.lookAt(0, camera.position.y * 0.5, 0);
+
+      renderer.render(scene, camera);
+    }
+
+    updateScroll();
+    animate();
+  </script>
 </body>
 </html>
