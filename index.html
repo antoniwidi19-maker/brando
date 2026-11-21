@@ -6,7 +6,8 @@
   <title>BRANDO — Beyond the Ordinary</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;500&family=Share+Tech+Mono&display=swap">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;500&family=Share+Tech+Mono&display=swap"></noscript>
   <script>document.documentElement.classList.add('js');</script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,8 +16,9 @@
       --bg: #03050a;
       --text: #e8f0ff;
       --accent: #5ad7ff;
+      --pink: #ff5fd8;
       --muted: rgba(232, 240, 255, 0.8);
-      --font-head: "Orbitron", "Arial Black", sans-serif;
+      --font-head: "Orbitron", "Arial Black", "Trebuchet MS", sans-serif;
       --font-body: "Exo 2", "Helvetica Neue", Arial, sans-serif;
       --font-mono: "Share Tech Mono", "Courier New", monospace;
     }
@@ -29,381 +31,177 @@
       text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
     }
 
-    body.no-gl {
-      background: radial-gradient(ellipse at 70% 50%, #2a0f3d 0%, #0a0616 40%, #03050a 80%);
-    }
-    body.no-gl #bg { display: none; }
-
-    #bg {
+    /* ===== LATAR ANGKASA (CSS, ringan) ===== */
+    #space {
       position: fixed;
       inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 70% 50%, #0b0d1c 0%, #03050a 65%);
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      background-repeat: repeat;
+      animation: twinkle 4s ease-in-out infinite;
+    }
+
+    .stars.a {
+      background-image:
+        radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+        radial-gradient(1px 1px at 90px 120px, #cfe9ff, transparent),
+        radial-gradient(1.5px 1.5px at 160px 60px, #fff, transparent),
+        radial-gradient(1px 1px at 230px 180px, #fff, transparent),
+        radial-gradient(1px 1px at 300px 90px, #cfe9ff, transparent);
+      background-size: 340px 240px;
+    }
+
+    .stars.b {
+      background-image:
+        radial-gradient(1px 1px at 50px 200px, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 140px 20px, #cfe9ff, transparent),
+        radial-gradient(1px 1px at 260px 150px, #fff, transparent),
+        radial-gradient(1px 1px at 380px 230px, #fff, transparent);
+      background-size: 420px 300px;
+      animation-duration: 6s;
+      animation-delay: -2s;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 1; }
+    }
+
+    /* Pusat lubang hitam: kanan di desktop, tengah-atas di HP */
+    .bh {
+      position: absolute;
+      left: 72%;
+      top: 50%;
+      width: min(62vmin, 560px);
+      height: min(62vmin, 560px);
+      transform: translate(-50%, -50%);
+    }
+
+    @media (max-width: 700px) {
+      .bh {
+        left: 50%;
+        top: 38%;
+        width: 84vw;
+        height: 84vw;
+      }
+    }
+
+    .bh-glow {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 80%;
+      height: 80%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 70, 210, 0.28) 0%, rgba(255, 70, 210, 0) 65%);
+    }
+
+    .bh-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 28%;
+      height: 28%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: #000;
+      box-shadow: 0 0 40px 8px rgba(255, 70, 210, 0.35);
+    }
+
+    .bh-photon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 31%;
+      height: 31%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 2px solid rgba(255, 170, 240, 0.95);
+      box-shadow: 0 0 18px rgba(255, 80, 220, 0.75);
+      animation: pulse 3.6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.03); }
+    }
+
+    /* Piringan akresi: dibuat dengan conic-gradient + mask, lalu diputar */
+    .disk-tilt {
+      position: absolute;
+      left: 50%;
+      top: 50%;
       width: 100%;
       height: 100%;
-      z-index: 0;
-      display: block;
+      transform: translate(-50%, -50%) perspective(700px) rotateX(70deg);
     }
 
-    .veil {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background: radial-gradient(
-        ellipse at 70% 50%,
-        rgba(3, 5, 10, 0.1) 0%,
-        rgba(3, 5, 10, 0.55) 60%,
-        rgba(3, 5, 10, 0.88) 100%
-      );
-    }
-
-    .logo {
-      position: fixed;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      font-family: var(--font-head);
-      font-size: 14px;
-      letter-spacing: 0.4em;
-      font-weight: 700;
-      pointer-events: none;
-    }
-
-    main {
-      position: relative;
-      z-index: 5;
-    }
-
-    section {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 0 24px;
-    }
-
-    /* Sebelum JS jalan, elemen reveal disembunyikan. Kalau JS gagal, konten tetap tampil. */
-    .js .rv { opacity: 0; }
-    .js .w { opacity: 0; }
-
-    .w {
-      display: inline-block;
-    }
-
-    .label {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      letter-spacing: 0.22em;
-      color: var(--accent);
-      margin-bottom: 18px;
-    }
-
-    h1, h2, h3, h4 {
-      font-family: var(--font-head);
-      font-weight: 900;
-      line-height: 1.05;
-      text-shadow: 0 0 40px rgba(90, 215, 255, 0.25), 0 2px 14px rgba(0, 0, 0, 0.85);
-    }
-
-    h1 {
-      font-size: clamp(26px, 7.4vw, 84px);
-      letter-spacing: 0.01em;
-      line-height: 1.1;
-    }
-
-    .sub {
-      margin-top: 22px;
-      max-width: 520px;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.7;
-      font-weight: 300;
-    }
-
-    .scroll-hint {
+    .disk {
       position: absolute;
-      bottom: 32px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.3em;
-      color: var(--muted);
+      inset: 0;
+      border-radius: 50%;
+      -webkit-mask: radial-gradient(circle, transparent 0 34%, #000 36% 46%, transparent 48%);
+      mask: radial-gradient(circle, transparent 0 34%, #000 36% 46%, transparent 48%);
     }
 
-    /* ===== Mission ===== */
-    .section-mission {
-      align-items: flex-start;
-      text-align: left;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 120px 24px;
+    .disk.outer {
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg 15deg,
+        #ffe6fa 35deg,
+        #ff4fd8 90deg,
+        transparent 140deg 200deg,
+        #ff4fd8 230deg,
+        #7a86ff 290deg,
+        transparent 330deg
+      );
+      animation: spin 16s linear infinite;
     }
 
-    .section-mission h2 {
-      font-size: clamp(24px, 5.6vw, 52px);
-      margin-bottom: 28px;
+    .disk.inner {
+      inset: 14%;
+      background: conic-gradient(
+        from 60deg,
+        transparent 0deg 20deg,
+        #ffffff 60deg,
+        #ff7ae6 110deg,
+        transparent 170deg 240deg,
+        #ff4fd8 280deg,
+        transparent 320deg
+      );
+      animation: spin 9s linear infinite reverse;
     }
 
-    .section-mission p {
-      max-width: 620px;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.75;
-      font-weight: 300;
-      margin-bottom: 18px;
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
-    .section-mission .lead {
-      color: var(--text);
-      font-size: 20px;
-      font-weight: 400;
-    }
-
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-top: 40px;
-    }
-
-    .stat {
-      border: 1px solid rgba(90, 215, 255, 0.3);
-      background: rgba(3, 5, 10, 0.7);
-      padding: 14px 20px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-    }
-
-    /* ===== Values ===== */
-    .section-values {
-      align-items: flex-start;
-      text-align: left;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 120px 24px;
-    }
-
-    .section-values h2 {
-      font-size: clamp(24px, 5.6vw, 52px);
-      margin-bottom: 36px;
-    }
-
-    .principles {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
+    /* Satelit kecil yang mengorbit */
+    .orbit {
+      position: absolute;
+      left: 50%;
+      top: 50%;
       width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%) perspective(900px) rotateX(70deg);
+      animation: orbit 12s linear infinite;
     }
 
-    .principle {
-      border-top: 1px solid rgba(90, 215, 255, 0.4);
-      padding: 22px 4px 0;
+    @keyframes orbit {
+      from { transform: translate(-50%, -50%) perspective(900px) rotateX(70deg) rotate(0deg); }
+      to { transform: translate(-50%, -50%) perspective(900px) rotateX(70deg) rotate(360deg); }
     }
 
-    .principle .idx {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .principle h4 {
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
-
-    .principle p {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.75;
-      font-weight: 300;
-    }
-
-    /* ===== Worlds ===== */
-    .section-worlds {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 120px 24px;
-      align-items: flex-start;
-      text-align: left;
-    }
-
-    .section-worlds h2 {
-      font-size: clamp(24px, 5.6vw, 52px);
-      margin-bottom: 20px;
-    }
-
-    .worlds-intro {
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.7;
-      font-weight: 300;
-      max-width: 620px;
-      margin-bottom: 48px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      width: 100%;
-    }
-
-    .card {
-      border: 1px solid rgba(90, 215, 255, 0.25);
-      background: rgba(6, 12, 24, 0.8);
-      padding: 32px 28px;
-      min-height: 280px;
-      display: flex;
-      flex-direction: column;
-      transition: border-color 0.4s ease, transform 0.4s ease;
-    }
-
-    .card:hover {
-      border-color: rgba(90, 215, 255, 0.6);
-      transform: translateY(-4px);
-    }
-
-    .card .num {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-      margin-bottom: 36px;
-    }
-
-    .card h3 {
-      font-size: 22px;
-      margin-bottom: 16px;
-    }
-
-    .card p {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.7;
-      font-weight: 300;
-      margin-bottom: 28px;
-    }
-
-    .card a {
-      margin-top: auto;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    /* ===== Technology ===== */
-    .section-tech {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 120px 24px;
-      align-items: flex-start;
-      text-align: left;
-    }
-
-    .section-tech h2 {
-      font-size: clamp(24px, 5.6vw, 52px);
-      margin-bottom: 20px;
-    }
-
-    .tech-intro {
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.7;
-      font-weight: 300;
-      max-width: 620px;
-      margin-bottom: 48px;
-    }
-
-    .tech-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      width: 100%;
-    }
-
-    .tech-item {
-      border-top: 1px solid rgba(90, 215, 255, 0.3);
-      padding-top: 20px;
-    }
-
-    .tech-item .idx {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--accent);
-      margin-bottom: 14px;
-    }
-
-    .tech-item h4 {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    .tech-item p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-      font-weight: 300;
-    }
-
-    /* ===== About ===== */
-    .section-about {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 120px 24px;
-      align-items: flex-start;
-      text-align: left;
-    }
-
-    .section-about h2 {
-      font-size: clamp(24px, 5.6vw, 52px);
-      margin-bottom: 28px;
-    }
-
-    .section-about p {
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.75;
-      font-weight: 300;
-      margin-bottom: 18px;
-    }
-
-    .coords {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-      margin-bottom: 20px;
-    }
-
-    /* ===== FAQ ===== */
-    .section-faq {
-      align-items: flex-start;
-      text-align: left;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 120px 24px;
-    }
-
-    .section-faq h2 {
-      font-size: clamp(24px, 5.6vw, 48px);
-      margin-bottom: 36px;
-    }
-
-    .faq-list {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
-
-    .faq-item {
-      border-left: 2px solid rgba(90, 215, 255, 0.5);
-      padding: 4px 0 4px 20px;
-    }
+    .sat {
+      position: absolute;
+      left: 50%;
+      top: -1.5%;
+      width:
