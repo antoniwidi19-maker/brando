@@ -1025,3 +1025,221 @@ main,
     scroll-behavior: auto !important;
   }
 }
+
+/* =========================================
+   ORBITAL 3D MOTION UPGRADE
+========================================= */
+
+.space-visual {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+}
+
+.earth-scene {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  transition: transform 0.25s ease-out;
+  will-change: transform;
+}
+
+/* Bumi punya kedalaman visual */
+.earth {
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation:
+    earthFloat 7s ease-in-out infinite,
+    earthRotate 40s linear infinite;
+}
+
+/* Lapisan permukaan berputar */
+.earth-surface {
+  animation: surfaceRotate 35s linear infinite;
+}
+
+/* Lapisan awan bergerak lebih cepat */
+.earth-clouds {
+  animation: cloudMove3D 24s linear infinite;
+}
+
+/* Orbit berputar dalam bidang 3D */
+.orbit-1 {
+  animation: orbitTilt1 18s linear infinite;
+  transform-style: preserve-3d;
+}
+
+.orbit-2 {
+  animation: orbitTilt2 27s linear infinite;
+  transform-style: preserve-3d;
+}
+
+.orbit-3 {
+  animation: orbitTilt3 34s linear infinite;
+  transform-style: preserve-3d;
+}
+
+/* Satelit punya gerakan independen */
+.satellite-1 {
+  animation: satellite3DOne 12s linear infinite;
+}
+
+.satellite-2 {
+  animation: satellite3DTwo 17s linear infinite;
+}
+
+.satellite-3 {
+  animation: satellite3DThree 9s ease-in-out infinite;
+}
+
+/* Efek cahaya Bumi */
+.earth-glow {
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+/* Radar */
+.radar-ring {
+  transform-style: preserve-3d;
+  animation: radarSpin 20s linear infinite;
+}
+
+/* Bintang parallax */
+#stars {
+  will-change: transform;
+}
+
+/* Animasi 3D */
+
+@keyframes earthRotate {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
+
+@keyframes surfaceRotate {
+  0% {
+    transform: rotate(0deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.05);
+  }
+}
+
+@keyframes cloudMove3D {
+  0% {
+    transform: rotate(0deg) scale(1.08);
+  }
+  100% {
+    transform: rotate(-360deg) scale(1.08);
+  }
+}
+
+@keyframes orbitTilt1 {
+  0% {
+    transform: rotate(-28deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotate(-28deg) rotateY(360deg);
+  }
+}
+
+@keyframes orbitTilt2 {
+  0% {
+    transform: rotate(35deg) rotateX(0deg);
+  }
+  100% {
+    transform: rotate(35deg) rotateX(360deg);
+  }
+}
+
+@keyframes orbitTilt3 {
+  0% {
+    transform: rotate(60deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotate(60deg) rotateZ(360deg);
+  }
+}
+
+@keyframes satellite3DOne {
+  0% {
+    transform: rotate(0deg) translateX(0) rotateY(0deg);
+  }
+  25% {
+    transform: rotate(90deg) translateX(12px) rotateY(90deg);
+  }
+  50% {
+    transform: rotate(180deg) translateX(0) rotateY(180deg);
+  }
+  75% {
+    transform: rotate(270deg) translateX(-12px) rotateY(270deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(0) rotateY(360deg);
+  }
+}
+
+@keyframes satellite3DTwo {
+  0% {
+    transform: rotate(0deg) translateY(0) rotateX(0deg);
+  }
+  50% {
+    transform: rotate(180deg) translateY(-20px) rotateX(180deg);
+  }
+  100% {
+    transform: rotate(360deg) translateY(0) rotateX(360deg);
+  }
+}
+
+@keyframes satellite3DThree {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotateY(0deg);
+  }
+  50% {
+    transform: translate3d(-20px, -25px, 45px) rotateY(180deg);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(68, 172, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(68, 172, 255, 0.45);
+  }
+}
+
+@keyframes radarSpin {
+  0% {
+    transform: rotateX(65deg) rotateZ(0deg);
+  }
+  100% {
+    transform: rotateX(65deg) rotateZ(360deg);
+  }
+}
+
+/* Hover zoom depth */
+.earth-scene:hover .earth {
+  box-shadow:
+    inset -45px -15px 70px rgba(0, 0, 0, 0.95),
+    inset 15px 10px 30px rgba(72, 179, 255, 0.45),
+    0 0 60px rgba(42, 133, 255, 0.35),
+    0 0 140px rgba(42, 133, 255, 0.2);
+}
+
+/* Mobile optimization */
+@media (max-width: 700px) {
+  .earth-scene {
+    perspective: 700px;
+  }
+
+  .coordinate {
+    transform: translateZ(30px);
+  }
+
+  .earth {
+    animation-duration: 50s, 50s;
+  }
+}
