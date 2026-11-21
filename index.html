@@ -4,11 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BRANDO — Beyond the Ordinary</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;500&family=Share+Tech+Mono&display=swap">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@300;400;500&family=Share+Tech+Mono&display=swap"></noscript>
-  <script>document.documentElement.classList.add('js');</script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -16,11 +11,10 @@
       --bg: #03050a;
       --text: #e8f0ff;
       --accent: #5ad7ff;
-      --pink: #ff5fd8;
       --muted: rgba(232, 240, 255, 0.8);
-      --font-head: "Orbitron", "Arial Black", "Trebuchet MS", sans-serif;
-      --font-body: "Exo 2", "Helvetica Neue", Arial, sans-serif;
-      --font-mono: "Share Tech Mono", "Courier New", monospace;
+      --font-head: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+      --font-body: "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "Courier New", Courier, monospace;
     }
 
     html, body {
@@ -31,7 +25,7 @@
       text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
     }
 
-    /* ===== LATAR ANGKASA (CSS, ringan) ===== */
+    /* ===== LATAR ANGKASA (CSS) ===== */
     #space {
       position: fixed;
       inset: 0;
@@ -43,7 +37,6 @@
     .stars {
       position: absolute;
       inset: 0;
-      background-repeat: repeat;
       animation: twinkle 4s ease-in-out infinite;
     }
 
@@ -73,7 +66,6 @@
       50% { opacity: 1; }
     }
 
-    /* Pusat lubang hitam: kanan di desktop, tengah-atas di HP */
     .bh {
       position: absolute;
       left: 72%;
@@ -133,7 +125,6 @@
       50% { transform: translate(-50%, -50%) scale(1.03); }
     }
 
-    /* Piringan akresi: dibuat dengan conic-gradient + mask, lalu diputar */
     .disk-tilt {
       position: absolute;
       left: 50%;
@@ -147,61 +138,4 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      -webkit-mask: radial-gradient(circle, transparent 0 34%, #000 36% 46%, transparent 48%);
-      mask: radial-gradient(circle, transparent 0 34%, #000 36% 46%, transparent 48%);
-    }
-
-    .disk.outer {
-      background: conic-gradient(
-        from 0deg,
-        transparent 0deg 15deg,
-        #ffe6fa 35deg,
-        #ff4fd8 90deg,
-        transparent 140deg 200deg,
-        #ff4fd8 230deg,
-        #7a86ff 290deg,
-        transparent 330deg
-      );
-      animation: spin 16s linear infinite;
-    }
-
-    .disk.inner {
-      inset: 14%;
-      background: conic-gradient(
-        from 60deg,
-        transparent 0deg 20deg,
-        #ffffff 60deg,
-        #ff7ae6 110deg,
-        transparent 170deg 240deg,
-        #ff4fd8 280deg,
-        transparent 320deg
-      );
-      animation: spin 9s linear infinite reverse;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* Satelit kecil yang mengorbit */
-    .orbit {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 100%;
-      height: 100%;
-      transform: translate(-50%, -50%) perspective(900px) rotateX(70deg);
-      animation: orbit 12s linear infinite;
-    }
-
-    @keyframes orbit {
-      from { transform: translate(-50%, -50%) perspective(900px) rotateX(70deg) rotate(0deg); }
-      to { transform: translate(-50%, -50%) perspective(900px) rotateX(70deg) rotate(360deg); }
-    }
-
-    .sat {
-      position: absolute;
-      left: 50%;
-      top: -1.5%;
-      width:
+      -webkit-mask: radial-gradient(circle, transparent 0 34%, #000 36% 46%, transparent 48
