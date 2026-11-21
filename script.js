@@ -172,3 +172,87 @@ console.log(
   "background:#061b35;color:#65c9ff;font-size:16px;padding:10px;"
 );
 console.log("Exploring the unseen.");
+
+/* =========================================
+   3D MOUSE DEPTH + PARALLAX
+========================================= */
+
+const scene3D = document.querySelector(".earth-scene");
+const visual3D = document.querySelector(".space-visual");
+
+let targetRX = 0;
+let targetRY = 0;
+let currentRX = 0;
+let currentRY = 0;
+
+window.addEventListener("mousemove", (e) => {
+  if (window.innerWidth <= 900) return;
+
+  const x = (e.clientX / window.innerWidth) - 0.5;
+  const y = (e.clientY / window.innerHeight) - 0.5;
+
+  targetRY = x * 14;
+  targetRX = -y * 14;
+});
+
+window.addEventListener("mouseleave", () => {
+  targetRX = 0;
+  targetRY = 0;
+});
+
+function animate3DScene() {
+  currentRX += (targetRX - currentRX) * 0.04;
+  currentRY += (targetRY - currentRY) * 0.04;
+
+  if (scene3D && window.innerWidth > 900) {
+    scene3D.style.transform =
+      `rotateX(${currentRX}deg) rotateY(${currentRY}deg)`;
+  }
+
+  requestAnimationFrame(animate3DScene);
+}
+
+animate3DScene();
+
+/* SCROLL DEPTH EFFECT */
+window.addEventListener("scroll", () => {
+  const scrollY = window.scrollY;
+
+  if (visual3D) {
+    visual3D.style.opacity =
+      Math.max(0.25, 1 - scrollY / 1100);
+  }
+});
+
+/* RANDOM SHOOTING STARS */
+function shootingStar() {
+  const star = document.createElement("div");
+
+  star.style.cssText = `
+    position:fixed;
+    top:${Math.random() * 50}%;
+    left:${Math.random() * 100}%;
+    width:100px;
+    height:1px;
+    background:linear-gradient(90deg,transparent,#8bdcff,transparent);
+    transform:rotate(-35deg);
+    pointer-events:none;
+    z-index:1;
+    opacity:0;
+    transition:opacity .3s;
+  `;
+
+  document.body.appendChild(star);
+
+  requestAnimationFrame(() => {
+    star.style.opacity = "1";
+    star.style.transform = "translate(-350px,250px) rotate(-35deg)";
+    star.style.transition = "transform 1s linear, opacity 1s";
+  });
+
+  setTimeout(() => star.remove(), 1200);
+}
+
+setInterval(() => {
+  if (Math.random() > 0.45) shootingStar();
+}, 2500);
