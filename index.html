@@ -41,6 +41,7 @@
       font-size: 14px;
       letter-spacing: 0.4em;
       font-weight: 600;
+      pointer-events: none;
     }
 
     /* Konten scroll */
@@ -64,7 +65,7 @@
     section > * {
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
     }
 
     section.in > * {
@@ -536,74 +537,307 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
-    // ===== Renderer, scene, kamera =====
+    // =====================================================
+    // HELPER: noise procedural (untuk tekstur planet & awan)
+    // =====================================================
+    function hash2(x, y) {
+      const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+      return s - Math.floor(s);
+    }
+
+    // Value noise yang bisa "nyambung" di sumbu X (tidak ada garis sambungan)
+    function vnoiseP(x, y, P) {
+      const xi = Math.floor(x), yi = Math.floor(y);
+      const xf = x - xi, yf = y - yi;
+      const u = xf * xf * (3 - 2 * xf);
+      const v = yf * yf * (3 - 2 * yf);
+      const x0 = ((xi % P) + P) % P;
+      const x1 = (((xi + 1) % P) + P) % P;
+      const a = hash2(x0, yi), b = hash2(x1, yi);
+      const c = hash2(x0, yi + 1), d = hash2(x1, yi + 1);
+      return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+    }
+
+    function fbmP(x, y, P, octaves) {
+      let v = 0, amp = 0.5, f = 1;
+      for (let i = 0; i < octaves; i++) {
+        v += amp * vnoiseP(x * f, y * f, P * f);
+        f *= 2;
+        amp *= 0.5;
+      }
+      return v;
+    }
+
+    // =====================================================
+    // TEKSTUR PLANET: warna, bump, dan awan
+    // =====================================================
+    function makeEarthTextures(W = 1024, H = 512) {
+      const colorCanvas = document.createElement('canvas');
+      const bumpCanvas = document.createElement('canvas');
+      colorCanvas.width = bumpCanvas.width = W;
+      colorCanvas.height = bumpCanvas.height = H;
+      const cctx = colorCanvas.getContext('2d');
+      const bctx = bumpCanvas.getContext('2d');
+      const cimg = cctx.createImageData(W, H);
+      const bimg = bctx.createImageData(W, H);
+
+      for (let y = 0; y < H; y++) {
+        const lat = (y / H - 0.5) * Math.PI;
+        const polar = Math.pow(Math.abs(Math.sin(lat)), 10);
+        for (let x = 0; x < W; x++) {
+          const n = fbmP(x / W * 4, y / H * 3, 4, 6);
+          const i = (y * W + x) * 4;
+          const isLand = n > 0.52;
+          let r, g, b, h;
+
+          if (isLand) {
+            const t = Math.min(1, (n - 0.52) * 4);
+            r = 70 + t * 110;
+            g = 120 - t * 40;
+            b = 60 + t * 40;
+            h = 150 + t * 90;
+          } else {
+            const depth = Math.min(1, (0.52 - n) * 4);
+            r = 14 + (1 - depth) * 20;
+            g = 60 + (1 - depth) * 40;
+            b = 120 + (1 - depth) * 40;
+            h = 30;
+          }
+
+          // Es di kutub
+          const ice = Math.min(1, polar * 1.4);
+          r += (235 - r) * ice;
+          g += (240 - g) * ice;
+          b += (245 - b) * ice;
+
+          cimg.data[i] = r;
+          cimg.data[i + 1] = g;
+          cimg.data[i + 2] = b;
+          cimg.data[i + 3] = 255;
+
+          bimg.data[i] = bimg.data[i + 1] = bimg.data[i + 2] = h;
+          bimg.data[i + 3] = 255;
+        }
+      }
+
+      cctx.putImageData(cimg, 0, 0);
+      bctx.putImageData(bimg, 0, 0);
+
+      return {
+        map: new THREE.CanvasTexture(colorCanvas),
+        bump: new THREE.CanvasTexture(bumpCanvas)
+      };
+    }
+
+    function makeCloudTexture(W = 1024, H = 512) {
+      const c = document.createElement('canvas');
+      c.width = W;
+      c.height = H;
+      const ctx = c.getContext('2d');
+      const img = ctx.createImageData(W, H);
+
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          const n = fbmP(x / W * 4, y / H * 3, 4, 6);
+          const i = (y * W + x) * 4;
+          const a = Math.min(1, Math.max(0, (n - 0.48) * 3.2));
+          img.data[i] = 255;
+          img.data[i + 1] = 255;
+          img.data[i + 2] = 255;
+          img.data[i + 3] = a * 255;
+        }
+      }
+
+      ctx.putImageData(img, 0, 0);
+      return new THREE.CanvasTexture(c);
+    }
+
+    // =====================================================
+    // SHADER ATMOSFER (glow biru di tepi planet)
+    // =====================================================
+    const atmoVert = `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const atmoFrag = `
+      varying vec3 vNormal;
+      void main() {
+        float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+        gl_FragColor = vec4(0.36, 0.78, 1.0, 1.0) * intensity;
+      }
+    `;
+
+    // =====================================================
+    // SATELIT (dibuat detail: bus, panel surya, antena, lampu)
+    // =====================================================
+    function buildSatellite() {
+      const g = new THREE.Group();
+
+      const busMat = new THREE.MeshStandardMaterial({ color: 0xc9d1df, metalness: 0.85, roughness: 0.28 });
+      const frameMat = new THREE.MeshStandardMaterial({ color: 0xaab3c4, metalness: 0.9, roughness: 0.35 });
+      const panelMat = new THREE.MeshStandardMaterial({
+        color: 0x1d3f8a, metalness: 0.6, roughness: 0.2, emissive: 0x06102a
+      });
+
+      const bus = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.5, 0.8), busMat);
+      g.add(bus);
+
+      function makePanel(side) {
+        const pg = new THREE.Group();
+
+        const arm = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.03, 0.05), frameMat);
+        arm.position.x = side * 0.6;
+        pg.add(arm);
+
+        const panel = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.02, 0.8), panelMat);
+        panel.position.x = side * 1.6;
+        pg.add(panel);
+
+        const edges = new THREE.LineSegments(
+          new THREE.EdgesGeometry(new THREE.BoxGeometry(2.0, 0.025, 0.8)),
+          new THREE.LineBasicMaterial({ color: 0x6fa8ff, transparent: true, opacity: 0.5 })
+        );
+        edges.position.copy(panel.position);
+        pg.add(edges);
+
+        for (let i = 1; i <= 3; i++) {
+          const line = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.03, 0.8), frameMat);
+          line.position.set(side * (0.6 + i * 0.5), 0, 0);
+          pg.add(line);
+        }
+
+        return pg;
+      }
+
+      g.add(makePanel(-1), makePanel(1));
+
+      const dishMat = frameMat.clone();
+      dishMat.side = THREE.DoubleSide;
+      const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.25, 0.18, 24, 1, true), dishMat);
+      dish.position.set(0, 0.42, 0.25);
+      dish.rotation.x = -0.5;
+      g.add(dish);
+
+      const ledMat = new THREE.MeshBasicMaterial({ color: 0xff3b3b });
+      const led = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 8), ledMat);
+      led.position.set(0, 0.26, -0.42);
+      g.add(led);
+
+      g.userData.led = led;
+      g.scale.setScalar(0.9);
+      return g;
+    }
+
+    // =====================================================
+    // RENDERER, SCENE, KAMERA
+    // =====================================================
     const canvas = document.getElementById('scene');
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x03050a, 1);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x03050a, 0.02);
+    scene.fog = new THREE.FogExp2(0x03050a, 0.012);
 
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
     camera.position.set(0, 0, 9);
 
     // ===== Lighting =====
-    scene.add(new THREE.AmbientLight(0x404a66, 0.6));
-    const sun = new THREE.DirectionalLight(0xbfe6ff, 1.2);
-    sun.position.set(5, 3, 5);
+    scene.add(new THREE.AmbientLight(0x3a4a70, 0.35));
+
+    const sun = new THREE.DirectionalLight(0xfff1dc, 2.4);
+    sun.position.set(-6, 2.5, 4);
     scene.add(sun);
 
-    // Daftar scene 3D, urutannya sama dengan section di <main>
+    const rim = new THREE.DirectionalLight(0x5ad7ff, 0.6);
+    rim.position.set(6, -2, -4);
+    scene.add(rim);
+
+    // Daftar scene 3D — urutannya sama dengan section di <main>
     const sceneGroups = [];
 
-    // ===== SCENE 0: HERO — Bumi, satelit, bintang =====
+    // =====================================================
+    // SCENE 0: HERO — Planet, awan, atmosfer, satelit
+    // =====================================================
     const heroGroup = new THREE.Group();
     scene.add(heroGroup);
     sceneGroups.push(heroGroup);
 
+    const { map: earthMap, bump: earthBump } = makeEarthTextures();
+    const cloudMap = makeCloudTexture();
+
     const earthGroup = new THREE.Group();
+    earthGroup.position.set(0, -2.8, -1);
+    earthGroup.rotation.z = -0.41;
     heroGroup.add(earthGroup);
 
     const earth = new THREE.Mesh(
-      new THREE.SphereGeometry(2.2, 64, 64),
-      new THREE.MeshPhongMaterial({ color: 0x1a4a8a, emissive: 0x06142e, shininess: 25 })
+      new THREE.SphereGeometry(2.2, 96, 96),
+      new THREE.MeshStandardMaterial({
+        map: earthMap,
+        bumpMap: earthBump,
+        bumpScale: 0.05,
+        roughness: 0.8,
+        metalness: 0
+      })
     );
     earthGroup.add(earth);
 
-    const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(2.35, 64, 64),
-      new THREE.MeshBasicMaterial({
-        color: 0x5ad7ff,
+    const clouds = new THREE.Mesh(
+      new THREE.SphereGeometry(2.26, 96, 96),
+      new THREE.MeshStandardMaterial({
+        map: cloudMap,
         transparent: true,
-        opacity: 0.12,
+        opacity: 0.85,
+        depthWrite: false,
+        roughness: 1
+      })
+    );
+    earthGroup.add(clouds);
+
+    const atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(2.5, 96, 96),
+      new THREE.ShaderMaterial({
+        vertexShader: atmoVert,
+        fragmentShader: atmoFrag,
+        blending: THREE.AdditiveBlending,
         side: THREE.BackSide,
-        blending: THREE.AdditiveBlending
+        transparent: true,
+        depthWrite: false
       })
     );
     earthGroup.add(atmosphere);
 
-    earthGroup.rotation.z = THREE.MathUtils.degToRad(-18);
-    earthGroup.position.set(0, -2.6, 0);
+    // Orbit satelit (miring, berpusat di planet)
+    const ORBIT_R = 3.5;
+    const orbitGroup = new THREE.Group();
+    orbitGroup.position.copy(earthGroup.position);
+    orbitGroup.rotation.set(0.35, 0, 0.3);
+    heroGroup.add(orbitGroup);
 
-    const satellite = new THREE.Group();
-    const body = new THREE.Mesh(
-      new THREE.BoxGeometry(0.4, 0.4, 0.6),
-      new THREE.MeshPhongMaterial({ color: 0xd8dde8, shininess: 80 })
+    const orbitRing = new THREE.Mesh(
+      new THREE.RingGeometry(ORBIT_R - 0.008, ORBIT_R + 0.008, 256),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.18, side: THREE.DoubleSide })
     );
-    satellite.add(body);
+    orbitRing.rotation.x = Math.PI / 2;
+    orbitGroup.add(orbitRing);
 
-    const panelMat = new THREE.MeshPhongMaterial({ color: 0x1b2a5c, emissive: 0x081028, shininess: 120 });
-    const panelL = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.04, 0.6), panelMat);
-    panelL.position.x = -0.9;
-    const panelR = panelL.clone();
-    panelR.position.x = 0.9;
-    satellite.add(panelL, panelR);
-    heroGroup.add(satellite);
+    const satellite = buildSatellite();
+    orbitGroup.add(satellite);
 
-    // ===== SCENE 1: MISSION — Node wireframe berputar =====
+    // =====================================================
+    // SCENE 1: MISSION — Node wireframe + inti bercahaya
+    // =====================================================
     const missionGroup = new THREE.Group();
+    missionGroup.position.set(0, 0, -2);
     scene.add(missionGroup);
     sceneGroups.push(missionGroup);
 
@@ -615,78 +849,152 @@
       new THREE.OctahedronGeometry(0.9),
       new THREE.MeshBasicMaterial({ color: 0xe8f0ff, wireframe: true })
     );
-    missionGroup.add(nodeOuter, nodeInner);
-    missionGroup.position.set(0, 0, -2);
+    const core = new THREE.Mesh(
+      new THREE.SphereGeometry(0.45, 32, 32),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff })
+    );
+    const halo = new THREE.Mesh(
+      new THREE.SphereGeometry(1.3, 32, 32),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.07, depthWrite: false })
+    );
+    missionGroup.add(nodeOuter, nodeInner, core, halo);
 
-    // ===== SCENE 2: WORLDS — Menara server dengan sorot cahaya emas =====
+    const missionRing = new THREE.Mesh(
+      new THREE.TorusGeometry(3, 0.01, 8, 200),
+      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.4 })
+    );
+    missionRing.rotation.x = 1.2;
+    missionGroup.add(missionRing);
+
+    const missionDot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.08, 12, 12),
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    );
+    missionRing.add(missionDot);
+
+    // =====================================================
+    // SCENE 2: WORLDS — Menara server + sorot cahaya emas
+    // =====================================================
     const worldsGroup = new THREE.Group();
+    worldsGroup.position.set(0, 0, -1);
     scene.add(worldsGroup);
     sceneGroups.push(worldsGroup);
 
     const tower = new THREE.Group();
-    const towerMat = new THREE.MeshStandardMaterial({
-      color: 0x1a1d24, metalness: 0.6, roughness: 0.4,
-      emissive: 0xffb300, emissiveIntensity: 0.05
-    });
-    for (let i = 0; i < 6; i++) {
-      const block = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 1.4), towerMat);
-      block.position.y = i * 0.5 - 1.25;
-      tower.add(block);
-    }
-    tower.position.set(0, 0, -1);
     worldsGroup.add(tower);
 
-    const spot = new THREE.SpotLight(0xffc857, 3, 30, Math.PI / 7, 0.5);
-    spot.position.set(0, 9, 2);
+    const rackMat = new THREE.MeshStandardMaterial({ color: 0x1a1d24, metalness: 0.7, roughness: 0.35 });
+    const leds = [];
+    for (let i = 0; i < 6; i++) {
+      const block = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.38, 1.6), rackMat);
+      block.position.y = i * 0.5 - 1.25;
+      tower.add(block);
+
+      for (let j = 0; j < 4; j++) {
+        const led = new THREE.Mesh(
+          new THREE.BoxGeometry(0.12, 0.05, 0.02),
+          new THREE.MeshBasicMaterial({ color: 0xffc857, transparent: true, opacity: 0.9 })
+        );
+        led.position.set(-0.5 + j * 0.33, i * 0.5 - 1.15, 0.81);
+        tower.add(led);
+        leds.push(led);
+      }
+    }
+
+    const groundGlow = new THREE.Mesh(
+      new THREE.CircleGeometry(3, 64),
+      new THREE.MeshBasicMaterial({ color: 0xffc857, transparent: true, opacity: 0.06, depthWrite: false })
+    );
+    groundGlow.rotation.x = -Math.PI / 2;
+    groundGlow.position.y = -1.6;
+    worldsGroup.add(groundGlow);
+
+    const spot = new THREE.SpotLight(0xffc857, 4, 40, Math.PI / 7, 0.5, 1.2);
+    spot.position.set(0, 9, 3);
     spot.target = tower;
     worldsGroup.add(spot);
 
-    // ===== SCENE 3: TECHNOLOGY — Kartu kaca dengan garis gelombang emas =====
+    // =====================================================
+    // SCENE 3: TECHNOLOGY — Kartu kaca + gelombang bergerak
+    // =====================================================
     const techGroup = new THREE.Group();
+    techGroup.position.set(0, 0, -1);
     scene.add(techGroup);
     sceneGroups.push(techGroup);
 
-    const card = new THREE.Mesh(
-      new THREE.BoxGeometry(3.6, 2.2, 0.05),
+    const cardGeo = new THREE.BoxGeometry(3.6, 2.2, 0.05);
+    const card3D = new THREE.Mesh(
+      cardGeo,
       new THREE.MeshStandardMaterial({
-        color: 0x0c1424, transparent: true, opacity: 0.55,
-        roughness: 0.2, metalness: 0.1
+        color: 0x0c1424, transparent: true, opacity: 0.6, roughness: 0.2, metalness: 0.2
       })
     );
-    techGroup.add(card);
+    techGroup.add(card3D);
 
+    const cardEdges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(cardGeo),
+      new THREE.LineBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.5 })
+    );
+    techGroup.add(cardEdges);
+
+    const waves = [];
     for (let k = 0; k < 3; k++) {
-      const pts = [];
-      for (let x = -1.7; x <= 1.7; x += 0.05) {
-        pts.push(new THREE.Vector3(x, Math.sin(x * 2 + k) * 0.35 + (k - 1) * 0.35, 0.04));
-      }
-      const wave = new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(pts),
+      const N = 120;
+      const geo = new THREE.BufferGeometry();
+      const arr = new Float32Array(N * 3);
+      geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+      const line = new THREE.Line(
+        geo,
         new THREE.LineBasicMaterial({ color: 0xffb13b, transparent: true, opacity: 0.9 })
       );
-      techGroup.add(wave);
+      techGroup.add(line);
+      waves.push({ geo, k, N });
     }
-    techGroup.position.set(0, 0, -1);
 
-    // ===== SCENE 4: ABOUT — Cincin teal berputar =====
+    const floatShape = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.35),
+      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, wireframe: true })
+    );
+    floatShape.position.set(2.6, 1.4, 0.6);
+    techGroup.add(floatShape);
+
+    // =====================================================
+    // SCENE 4: ABOUT — Cincin teal berputar + titik orbit
+    // =====================================================
     const aboutGroup = new THREE.Group();
+    aboutGroup.position.set(0, 0, -2);
     scene.add(aboutGroup);
     sceneGroups.push(aboutGroup);
 
     const ring1 = new THREE.Mesh(
-      new THREE.TorusGeometry(2.4, 0.015, 8, 160),
+      new THREE.TorusGeometry(2.4, 0.015, 8, 200),
       new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.8 })
     );
+    ring1.rotation.x = 1.1;
+    aboutGroup.add(ring1);
+
     const ring2 = new THREE.Mesh(
-      new THREE.TorusGeometry(1.8, 0.015, 8, 160),
+      new THREE.TorusGeometry(1.8, 0.015, 8, 200),
       new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.4 })
     );
     ring2.rotation.x = Math.PI / 2.4;
-    aboutGroup.add(ring1, ring2);
-    aboutGroup.position.set(0, 0, -2);
+    aboutGroup.add(ring2);
 
-    // ===== SCENE 5: CONTACT — Sinyal yang berdenyut =====
+    const aboutDots = [];
+    for (let i = 0; i < 3; i++) {
+      const dot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.07, 12, 12),
+        new THREE.MeshBasicMaterial({ color: 0xffffff })
+      );
+      ring1.add(dot);
+      aboutDots.push(dot);
+    }
+
+    // =====================================================
+    // SCENE 5: CONTACT — Sinyal berdenyut + gelombang riak
+    // =====================================================
     const contactGroup = new THREE.Group();
+    contactGroup.position.set(0, 0, -2);
     scene.add(contactGroup);
     sceneGroups.push(contactGroup);
 
@@ -695,57 +1003,73 @@
       new THREE.MeshBasicMaterial({ color: 0x5ad7ff, wireframe: true, transparent: true, opacity: 0.5 })
     );
     contactGroup.add(signal);
-    contactGroup.position.set(0, 0, -2);
 
-    // Semua scene mulai dari kondisi "mengecil" dan hanya scene aktif yang membesar
+    const ripples = [];
+    for (let i = 0; i < 3; i++) {
+      const r = new THREE.Mesh(
+        new THREE.RingGeometry(1.6, 1.64, 128),
+        new THREE.MeshBasicMaterial({
+          color: 0x5ad7ff, transparent: true, opacity: 0,
+          depthWrite: false, side: THREE.DoubleSide
+        })
+      );
+      contactGroup.add(r);
+      ripples.push(r);
+    }
+
+    // Semua scene mulai dari kondisi kecil, hanya scene aktif yang membesar
     sceneGroups.forEach(g => {
       g.scale.setScalar(0.0001);
       g.visible = false;
     });
 
-    // ===== Bintang (latar belakang untuk semua scene) =====
-    const starCount = 1500;
-    const starPos = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      starPos[i * 3]     = (Math.random() - 0.5) * 120;
-      starPos[i * 3 + 1] = (Math.random() - 0.5) * 120;
-      starPos[i * 3 + 2] = (Math.random() - 0.5) * 120;
+    // =====================================================
+    // BINTANG (dua lapisan: jauh & dekat)
+    // =====================================================
+    function makeStars(count, spread, color, size) {
+      const pos = new Float32Array(count * 3);
+      for (let i = 0; i < count * 3; i++) {
+        pos[i] = (Math.random() - 0.5) * spread;
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      return new THREE.Points(
+        geo,
+        new THREE.PointsMaterial({ color, size, transparent: true, opacity: 0.8, fog: false })
+      );
     }
-    const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-    const stars = new THREE.Points(
-      starGeo,
-      new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.8 })
-    );
-    scene.add(stars);
 
-    // ===== Scroll progress & section aktif =====
+    const starsFar = makeStars(1400, 160, 0xffffff, 0.08);
+    const starsNear = makeStars(400, 60, 0x9fdfff, 0.14);
+    scene.add(starsFar, starsNear);
+
+    // =====================================================
+    // SCROLL, SECTION AKTIF, REVEAL
+    // =====================================================
     const sectionEls = Array.from(document.querySelectorAll('main > section'));
-    let scrollProgress = 0;
+    let scrollTarget = 0;
+    let scrollCurrent = 0;
     let activeIndex = 0;
 
     function updateScroll() {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgress = max > 0 ? window.scrollY / max : 0;
+      scrollTarget = max > 0 ? window.scrollY / max : 0;
 
-      // Cari section yang paling dekat dengan tengah layar
       const mid = window.innerHeight / 2;
       let best = 0;
       let bestDist = Infinity;
       sectionEls.forEach((el, i) => {
         const r = el.getBoundingClientRect();
-        const center = r.top + r.height / 2;
-        const dist = Math.abs(center - mid);
+        const dist = Math.abs(r.top + r.height / 2 - mid);
         if (dist < bestDist) {
           bestDist = dist;
           best = i;
         }
       });
-      activeIndex = best;
+      activeIndex = Math.min(best, sceneGroups.length - 1);
     }
     window.addEventListener('scroll', updateScroll, { passive: true });
 
-    // ===== Animasi muncul saat section masuk layar =====
     const io = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) e.target.classList.add('in');
@@ -753,7 +1077,9 @@
     }, { threshold: 0.15 });
     sectionEls.forEach(el => io.observe(el));
 
-    // ===== Mouse parallax =====
+    // =====================================================
+    // MOUSE PARALLAX
+    // =====================================================
     let mouseX = 0;
     let mouseY = 0;
     window.addEventListener('pointermove', e => {
@@ -761,21 +1087,28 @@
       mouseY = e.clientY / window.innerHeight - 0.5;
     });
 
-    // ===== Resize =====
+    // =====================================================
+    // RESIZE
+    // =====================================================
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // ===== Loop animasi =====
+    // =====================================================
+    // LOOP ANIMASI
+    // =====================================================
     const clock = new THREE.Clock();
 
     function animate() {
       requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // Transisi scene: scene aktif membesar, lainnya mengecil
+      // Scroll dihaluskan
+      scrollCurrent += (scrollTarget - scrollCurrent) * 0.08;
+
+      // Transisi scene: yang aktif membesar, yang lain mengecil
       sceneGroups.forEach((g, i) => {
         const target = i === activeIndex ? 1 : 0.0001;
         const s = THREE.MathUtils.lerp(g.scale.x, target, 0.06);
@@ -783,43 +1116,73 @@
         g.visible = s > 0.01;
       });
 
-      // Hero: bumi berputar, satelit mengorbit
+      // HERO: planet dan awan berputar, satelit mengorbit
       earth.rotation.y = t * 0.05;
-      const angle = t * 0.25;
-      satellite.position.set(
-        Math.cos(angle) * 3.2,
-        1.2 + Math.sin(angle * 0.5) * 0.3,
-        Math.sin(angle) * 3.2 - 1
-      );
-      satellite.lookAt(earthGroup.position);
+      clouds.rotation.y = t * 0.07;
 
-      // Mission: node berputar
+      const a = t * 0.18;
+      satellite.position.set(Math.cos(a) * ORBIT_R, 0, Math.sin(a) * ORBIT_R);
+      satellite.rotation.y = -a;
+      satellite.userData.led.visible = Math.sin(t * 4) > 0;
+
+      // MISSION: node berputar, inti berdenyut, titik berjalan di cincin
       nodeOuter.rotation.y = t * 0.15;
       nodeOuter.rotation.x = t * 0.08;
       nodeInner.rotation.y = -t * 0.3;
+      core.scale.setScalar(1 + Math.sin(t * 2) * 0.06);
+      missionRing.rotation.z = t * 0.1;
+      missionDot.position.set(Math.cos(t * 0.6) * 3, Math.sin(t * 0.6) * 3, 0);
 
-      // Worlds: menara berputar pelan
-      tower.rotation.y = t * 0.15;
+      // WORLDS: menara berputar pelan, LED berkedip bergantian
+      tower.rotation.y = t * 0.12;
+      leds.forEach((led, idx) => {
+        led.material.opacity = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 3 + idx * 0.7));
+      });
 
-      // Tech: kartu bergoyang pelan
+      // TECH: kartu bergoyang, gelombang bergerak, bentuk melayang berputar
       techGroup.rotation.y = Math.sin(t * 0.3) * 0.2;
+      waves.forEach(w => {
+        const pos = w.geo.attributes.position.array;
+        for (let i = 0; i < w.N; i++) {
+          const x = -1.7 + i * (3.4 / (w.N - 1));
+          pos[i * 3] = x;
+          pos[i * 3 + 1] = Math.sin(x * 2 + t * 1.5 + w.k) * 0.3 + (w.k - 1) * 0.35;
+          pos[i * 3 + 2] = 0.04;
+        }
+        w.geo.attributes.position.needsUpdate = true;
+      });
+      floatShape.rotation.x = t * 0.4;
+      floatShape.rotation.y = t * 0.6;
 
-      // About: cincin berputar
-      ring1.rotation.z = t * 0.1;
+      // ABOUT: cincin berputar, titik berjalan di cincin
+      aboutGroup.rotation.y = t * 0.1;
+      ring1.rotation.z = t * 0.12;
       ring2.rotation.z = -t * 0.15;
+      aboutDots.forEach((dot, i) => {
+        const ang = t * 0.6 + i * ((Math.PI * 2) / 3);
+        dot.position.set(Math.cos(ang) * 2.4, Math.sin(ang) * 2.4, 0);
+      });
 
-      // Contact: sinyal berdenyut
-      const pulse = 1 + Math.sin(t * 2) * 0.05;
-      signal.scale.setScalar(pulse);
+      // CONTACT: sinyal berdenyut, riak melebar lalu memudar
       signal.rotation.y = t * 0.1;
+      signal.scale.setScalar(1 + Math.sin(t * 2) * 0.05);
+      ripples.forEach((r, i) => {
+        const p = (t * 0.4 + i / ripples.length) % 1;
+        r.scale.setScalar(1 + p * 3);
+        r.material.opacity = (1 - p) * 0.6;
+      });
 
       // Bintang berputar pelan
-      stars.rotation.y = t * 0.01;
+      starsFar.rotation.y = t * 0.01;
+      starsNear.rotation.y = t * 0.02;
 
-      // Kamera: turun sesuai scroll + sedikit ikut kursor
-      camera.position.x += (mouseX * 1.2 - camera.position.x) * 0.05;
-      camera.position.y = -scrollProgress * 3 + mouseY * -0.6;
-      camera.position.z = 9 - scrollProgress * 2;
+      // KAMERA: turun sesuai scroll + ikut kursor
+      const targetX = mouseX * 1.2;
+      const targetY = -scrollCurrent * 3 + mouseY * -0.6;
+      const targetZ = 9 - scrollCurrent * 2;
+      camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.05);
+      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.08);
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.08);
       camera.lookAt(0, camera.position.y * 0.5, 0);
 
       renderer.render(scene, camera);
