@@ -11,7 +11,7 @@
       --bg: #03050a;
       --text: #e8f0ff;
       --accent: #5ad7ff;
-      --muted: rgba(232, 240, 255, 0.55);
+      --muted: rgba(232, 240, 255, 0.78);
     }
 
     html, body {
@@ -19,9 +19,10 @@
       color: var(--text);
       font-family: "Helvetica Neue", Arial, sans-serif;
       overflow-x: hidden;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
     }
 
-    /* Canvas 3D tetap di belakang */
+    /* Canvas 3D tetap di belakang, dibuat lebih redup */
     #scene {
       position: fixed;
       inset: 0;
@@ -29,6 +30,21 @@
       height: 100%;
       z-index: 0;
       display: block;
+      opacity: 0.8;
+    }
+
+    /* Lapisan gelap di atas 3D, supaya teks tetap jelas */
+    .veil {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at 65% 50%,
+        rgba(3, 5, 10, 0.15) 0%,
+        rgba(3, 5, 10, 0.7) 60%,
+        rgba(3, 5, 10, 0.92) 100%
+      );
     }
 
     /* Logo kecil di atas tengah */
@@ -61,11 +77,11 @@
       padding: 0 24px;
     }
 
-    /* Animasi muncul saat scroll */
+    /* Animasi muncul saat scroll: lebih halus dan tidak terlalu jauh geraknya */
     section > * {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+      transform: translateY(14px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
     }
 
     section.in > * {
@@ -73,10 +89,10 @@
       transform: none;
     }
 
-    section.in > *:nth-child(2) { transition-delay: 0.1s; }
-    section.in > *:nth-child(3) { transition-delay: 0.2s; }
-    section.in > *:nth-child(4) { transition-delay: 0.3s; }
-    section.in > *:nth-child(5) { transition-delay: 0.4s; }
+    section.in > *:nth-child(2) { transition-delay: 0.12s; }
+    section.in > *:nth-child(3) { transition-delay: 0.24s; }
+    section.in > *:nth-child(4) { transition-delay: 0.36s; }
+    section.in > *:nth-child(5) { transition-delay: 0.48s; }
 
     .label {
       font-family: "Courier New", monospace;
@@ -91,14 +107,14 @@
       font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1;
-      text-shadow: 0 0 40px rgba(90, 215, 255, 0.25);
+      text-shadow: 0 0 40px rgba(90, 215, 255, 0.25), 0 2px 14px rgba(0, 0, 0, 0.85);
     }
 
     .sub {
       margin-top: 22px;
       max-width: 520px;
       color: var(--muted);
-      font-size: 16px;
+      font-size: 17px;
       line-height: 1.6;
     }
 
@@ -125,7 +141,7 @@
       font-weight: 700;
       line-height: 1.05;
       margin-bottom: 28px;
-      text-shadow: 0 0 30px rgba(90, 215, 255, 0.2);
+      text-shadow: 0 0 30px rgba(90, 215, 255, 0.2), 0 2px 14px rgba(0, 0, 0, 0.85);
     }
 
     .section-mission p {
@@ -149,8 +165,8 @@
     }
 
     .stat {
-      border: 1px solid rgba(90, 215, 255, 0.25);
-      background: rgba(90, 215, 255, 0.04);
+      border: 1px solid rgba(90, 215, 255, 0.3);
+      background: rgba(3, 5, 10, 0.7);
       padding: 14px 20px;
       font-family: "Courier New", monospace;
       font-size: 12px;
@@ -190,9 +206,8 @@
     }
 
     .card {
-      border: 1px solid rgba(90, 215, 255, 0.2);
-      background: rgba(6, 12, 24, 0.6);
-      backdrop-filter: blur(8px);
+      border: 1px solid rgba(90, 215, 255, 0.25);
+      background: rgba(6, 12, 24, 0.8);
       padding: 32px 28px;
       min-height: 280px;
       display: flex;
@@ -340,6 +355,7 @@
     .btn {
       display: inline-block;
       border: 1px solid var(--accent);
+      background: rgba(3, 5, 10, 0.7);
       color: var(--accent);
       padding: 16px 28px;
       font-family: "Courier New", monospace;
@@ -375,7 +391,8 @@
       font-size: 11px;
       letter-spacing: 0.25em;
       color: var(--muted);
-      border-top: 1px solid rgba(90, 215, 255, 0.1);
+      border-top: 1px solid rgba(90, 215, 255, 0.15);
+      background: rgba(3, 5, 10, 0.85);
     }
 
     footer a {
@@ -385,6 +402,7 @@
 
     /* ===== Mobile ===== */
     @media (max-width: 600px) {
+      #scene { opacity: 0.4; }
       .logo { font-size: 12px; }
       .section-mission,
       .section-worlds,
@@ -397,6 +415,7 @@
 <body>
 
   <canvas id="scene"></canvas>
+  <div class="veil"></div>
 
   <div class="logo">BRANDO.</div>
 
@@ -442,754 +461,3 @@
     <section class="section-worlds" id="worlds">
       <div class="label">02 — WORLDS / EXPLORE THE DIMENSIONS</div>
       <h2>THREE PATHS.<br>INFINITE DESTINATIONS.</h2>
-      <p class="worlds-intro">
-        Each dimension represents a different way to explore ideas, challenge conventions and discover new possibilities.
-      </p>
-
-      <div class="cards">
-        <div class="card">
-          <div class="num">DIMENSION / 001 — CREATIVE SPACE</div>
-          <h3>CREATION</h3>
-          <p>The birthplace of ideas. A dimension dedicated to imagination, original thinking and the freedom to turn abstract concepts into meaningful experiences.</p>
-          <a href="#contact">EXPLORE THIS DIMENSION ↗</a>
-        </div>
-
-        <div class="card">
-          <div class="num">DIMENSION / 002 — TECH SYSTEM</div>
-          <h3>INNOVATION</h3>
-          <p>Where imagination meets engineering. Explore new tools, emerging technology and digital systems designed to expand what humans can create.</p>
-          <a href="#technology">EXPLORE THIS DIMENSION ↗</a>
-        </div>
-
-        <div class="card">
-          <div class="num">DIMENSION / 003 — UNKNOWN TERRITORY</div>
-          <h3>EXPLORATION</h3>
-          <p>A journey into the unknown. Discover unfamiliar perspectives, question existing boundaries and approach the future with an open mind.</p>
-          <a href="#contact">EXPLORE THIS DIMENSION ↗</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 03 — TECHNOLOGY -->
-    <section class="section-tech" id="technology">
-      <div class="label">03 — TECHNOLOGY / BEHIND THE EXPERIENCE</div>
-      <h2>DIGITAL WORLDS.<br>REAL INTERACTION.</h2>
-      <p class="tech-intro">
-        Technology is not only a tool for building. It is a medium for creating new experiences.
-        The BRANDO environment combines real-time rendering, responsive motion and layered visuals
-        to transform a simple website into an interactive space.
-      </p>
-
-      <div class="tech-grid">
-        <div class="tech-item">
-          <div class="idx">01</div>
-          <h4>REAL-TIME 3D</h4>
-          <p>Interactive geometry, lighting and spatial depth rendered in real time.</p>
-        </div>
-        <div class="tech-item">
-          <div class="idx">02</div>
-          <h4>GENERATIVE MOTION</h4>
-          <p>Organic movement and smooth transitions that respond to the environment.</p>
-        </div>
-        <div class="tech-item">
-          <div class="idx">03</div>
-          <h4>IMMERSIVE INTERFACE</h4>
-          <p>Visual elements designed to create a coherent and engaging digital journey.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 04 — ABOUT -->
-    <section class="section-about" id="about">
-      <div class="label">04 — ABOUT BRANDO / AN INDEPENDENT PROJECT</div>
-      <div class="coords">N 42° 09' / E 18° 22'</div>
-      <h2>BUILT FOR THE CURIOUS.</h2>
-      <p>
-        BRANDO is an independent digital concept exploring the intersection of design, technology and imagination.
-      </p>
-      <p>
-        It is a continuously evolving project. A place to experiment with new visual systems,
-        interactive environments and ideas that have yet to find their limits.
-      </p>
-      <p>
-        There is no final destination. There is only the next horizon, the next discovery and the next possibility.
-      </p>
-    </section>
-
-    <!-- 05 — CONTACT -->
-    <section class="section-contact" id="contact">
-      <div class="label">05 — TRANSMISSION</div>
-      <h2>THE NEXT HORIZON<br>STARTS HERE.</h2>
-      <p class="sub">
-        Every journey begins with curiosity.<br>
-        Send a signal. Let's discover what comes next.
-      </p>
-      <a class="btn" href="mailto:hello@brando.space">INITIATE CONTACT ↗</a>
-      <div class="signal">SIGNAL STATUS / READY</div>
-    </section>
-  </main>
-
-  <footer>
-    <div>BRANDO.</div>
-    <div>INDEPENDENT DIGITAL UNIVERSE · 2026</div>
-    <a href="#hero">BACK TO TOP ↑</a>
-  </footer>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script>
-    // =====================================================
-    // HELPER: noise procedural (untuk tekstur planet & awan)
-    // =====================================================
-    function hash2(x, y) {
-      const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
-      return s - Math.floor(s);
-    }
-
-    // Value noise yang bisa "nyambung" di sumbu X (tidak ada garis sambungan)
-    function vnoiseP(x, y, P) {
-      const xi = Math.floor(x), yi = Math.floor(y);
-      const xf = x - xi, yf = y - yi;
-      const u = xf * xf * (3 - 2 * xf);
-      const v = yf * yf * (3 - 2 * yf);
-      const x0 = ((xi % P) + P) % P;
-      const x1 = (((xi + 1) % P) + P) % P;
-      const a = hash2(x0, yi), b = hash2(x1, yi);
-      const c = hash2(x0, yi + 1), d = hash2(x1, yi + 1);
-      return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
-    }
-
-    function fbmP(x, y, P, octaves) {
-      let v = 0, amp = 0.5, f = 1;
-      for (let i = 0; i < octaves; i++) {
-        v += amp * vnoiseP(x * f, y * f, P * f);
-        f *= 2;
-        amp *= 0.5;
-      }
-      return v;
-    }
-
-    // =====================================================
-    // TEKSTUR PLANET: warna, bump, dan awan
-    // =====================================================
-    function makeEarthTextures(W = 1024, H = 512) {
-      const colorCanvas = document.createElement('canvas');
-      const bumpCanvas = document.createElement('canvas');
-      colorCanvas.width = bumpCanvas.width = W;
-      colorCanvas.height = bumpCanvas.height = H;
-      const cctx = colorCanvas.getContext('2d');
-      const bctx = bumpCanvas.getContext('2d');
-      const cimg = cctx.createImageData(W, H);
-      const bimg = bctx.createImageData(W, H);
-
-      for (let y = 0; y < H; y++) {
-        const lat = (y / H - 0.5) * Math.PI;
-        const polar = Math.pow(Math.abs(Math.sin(lat)), 10);
-        for (let x = 0; x < W; x++) {
-          const n = fbmP(x / W * 4, y / H * 3, 4, 6);
-          const i = (y * W + x) * 4;
-          const isLand = n > 0.52;
-          let r, g, b, h;
-
-          if (isLand) {
-            const t = Math.min(1, (n - 0.52) * 4);
-            r = 70 + t * 110;
-            g = 120 - t * 40;
-            b = 60 + t * 40;
-            h = 150 + t * 90;
-          } else {
-            const depth = Math.min(1, (0.52 - n) * 4);
-            r = 14 + (1 - depth) * 20;
-            g = 60 + (1 - depth) * 40;
-            b = 120 + (1 - depth) * 40;
-            h = 30;
-          }
-
-          // Es di kutub
-          const ice = Math.min(1, polar * 1.4);
-          r += (235 - r) * ice;
-          g += (240 - g) * ice;
-          b += (245 - b) * ice;
-
-          cimg.data[i] = r;
-          cimg.data[i + 1] = g;
-          cimg.data[i + 2] = b;
-          cimg.data[i + 3] = 255;
-
-          bimg.data[i] = bimg.data[i + 1] = bimg.data[i + 2] = h;
-          bimg.data[i + 3] = 255;
-        }
-      }
-
-      cctx.putImageData(cimg, 0, 0);
-      bctx.putImageData(bimg, 0, 0);
-
-      return {
-        map: new THREE.CanvasTexture(colorCanvas),
-        bump: new THREE.CanvasTexture(bumpCanvas)
-      };
-    }
-
-    function makeCloudTexture(W = 1024, H = 512) {
-      const c = document.createElement('canvas');
-      c.width = W;
-      c.height = H;
-      const ctx = c.getContext('2d');
-      const img = ctx.createImageData(W, H);
-
-      for (let y = 0; y < H; y++) {
-        for (let x = 0; x < W; x++) {
-          const n = fbmP(x / W * 4, y / H * 3, 4, 6);
-          const i = (y * W + x) * 4;
-          const a = Math.min(1, Math.max(0, (n - 0.48) * 3.2));
-          img.data[i] = 255;
-          img.data[i + 1] = 255;
-          img.data[i + 2] = 255;
-          img.data[i + 3] = a * 255;
-        }
-      }
-
-      ctx.putImageData(img, 0, 0);
-      return new THREE.CanvasTexture(c);
-    }
-
-    // =====================================================
-    // SHADER ATMOSFER (glow biru di tepi planet)
-    // =====================================================
-    const atmoVert = `
-      varying vec3 vNormal;
-      void main() {
-        vNormal = normalize(normalMatrix * normal);
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `;
-
-    const atmoFrag = `
-      varying vec3 vNormal;
-      void main() {
-        float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
-        gl_FragColor = vec4(0.36, 0.78, 1.0, 1.0) * intensity;
-      }
-    `;
-
-    // =====================================================
-    // SATELIT (dibuat detail: bus, panel surya, antena, lampu)
-    // =====================================================
-    function buildSatellite() {
-      const g = new THREE.Group();
-
-      const busMat = new THREE.MeshStandardMaterial({ color: 0xc9d1df, metalness: 0.85, roughness: 0.28 });
-      const frameMat = new THREE.MeshStandardMaterial({ color: 0xaab3c4, metalness: 0.9, roughness: 0.35 });
-      const panelMat = new THREE.MeshStandardMaterial({
-        color: 0x1d3f8a, metalness: 0.6, roughness: 0.2, emissive: 0x06102a
-      });
-
-      const bus = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.5, 0.8), busMat);
-      g.add(bus);
-
-      function makePanel(side) {
-        const pg = new THREE.Group();
-
-        const arm = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.03, 0.05), frameMat);
-        arm.position.x = side * 0.6;
-        pg.add(arm);
-
-        const panel = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.02, 0.8), panelMat);
-        panel.position.x = side * 1.6;
-        pg.add(panel);
-
-        const edges = new THREE.LineSegments(
-          new THREE.EdgesGeometry(new THREE.BoxGeometry(2.0, 0.025, 0.8)),
-          new THREE.LineBasicMaterial({ color: 0x6fa8ff, transparent: true, opacity: 0.5 })
-        );
-        edges.position.copy(panel.position);
-        pg.add(edges);
-
-        for (let i = 1; i <= 3; i++) {
-          const line = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.03, 0.8), frameMat);
-          line.position.set(side * (0.6 + i * 0.5), 0, 0);
-          pg.add(line);
-        }
-
-        return pg;
-      }
-
-      g.add(makePanel(-1), makePanel(1));
-
-      const dishMat = frameMat.clone();
-      dishMat.side = THREE.DoubleSide;
-      const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.25, 0.18, 24, 1, true), dishMat);
-      dish.position.set(0, 0.42, 0.25);
-      dish.rotation.x = -0.5;
-      g.add(dish);
-
-      const ledMat = new THREE.MeshBasicMaterial({ color: 0xff3b3b });
-      const led = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 8), ledMat);
-      led.position.set(0, 0.26, -0.42);
-      g.add(led);
-
-      g.userData.led = led;
-      g.scale.setScalar(0.9);
-      return g;
-    }
-
-    // =====================================================
-    // RENDERER, SCENE, KAMERA
-    // =====================================================
-    const canvas = document.getElementById('scene');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x03050a, 1);
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x03050a, 0.012);
-
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 500);
-    camera.position.set(0, 0, 9);
-
-    // ===== Lighting =====
-    scene.add(new THREE.AmbientLight(0x3a4a70, 0.35));
-
-    const sun = new THREE.DirectionalLight(0xfff1dc, 2.4);
-    sun.position.set(-6, 2.5, 4);
-    scene.add(sun);
-
-    const rim = new THREE.DirectionalLight(0x5ad7ff, 0.6);
-    rim.position.set(6, -2, -4);
-    scene.add(rim);
-
-    // Daftar scene 3D — urutannya sama dengan section di <main>
-    const sceneGroups = [];
-
-    // =====================================================
-    // SCENE 0: HERO — Planet, awan, atmosfer, satelit
-    // =====================================================
-    const heroGroup = new THREE.Group();
-    scene.add(heroGroup);
-    sceneGroups.push(heroGroup);
-
-    const { map: earthMap, bump: earthBump } = makeEarthTextures();
-    const cloudMap = makeCloudTexture();
-
-    const earthGroup = new THREE.Group();
-    earthGroup.position.set(0, -2.8, -1);
-    earthGroup.rotation.z = -0.41;
-    heroGroup.add(earthGroup);
-
-    const earth = new THREE.Mesh(
-      new THREE.SphereGeometry(2.2, 96, 96),
-      new THREE.MeshStandardMaterial({
-        map: earthMap,
-        bumpMap: earthBump,
-        bumpScale: 0.05,
-        roughness: 0.8,
-        metalness: 0
-      })
-    );
-    earthGroup.add(earth);
-
-    const clouds = new THREE.Mesh(
-      new THREE.SphereGeometry(2.26, 96, 96),
-      new THREE.MeshStandardMaterial({
-        map: cloudMap,
-        transparent: true,
-        opacity: 0.85,
-        depthWrite: false,
-        roughness: 1
-      })
-    );
-    earthGroup.add(clouds);
-
-    const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(2.5, 96, 96),
-      new THREE.ShaderMaterial({
-        vertexShader: atmoVert,
-        fragmentShader: atmoFrag,
-        blending: THREE.AdditiveBlending,
-        side: THREE.BackSide,
-        transparent: true,
-        depthWrite: false
-      })
-    );
-    earthGroup.add(atmosphere);
-
-    // Orbit satelit (miring, berpusat di planet)
-    const ORBIT_R = 3.5;
-    const orbitGroup = new THREE.Group();
-    orbitGroup.position.copy(earthGroup.position);
-    orbitGroup.rotation.set(0.35, 0, 0.3);
-    heroGroup.add(orbitGroup);
-
-    const orbitRing = new THREE.Mesh(
-      new THREE.RingGeometry(ORBIT_R - 0.008, ORBIT_R + 0.008, 256),
-      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.18, side: THREE.DoubleSide })
-    );
-    orbitRing.rotation.x = Math.PI / 2;
-    orbitGroup.add(orbitRing);
-
-    const satellite = buildSatellite();
-    orbitGroup.add(satellite);
-
-    // =====================================================
-    // SCENE 1: MISSION — Node wireframe + inti bercahaya
-    // =====================================================
-    const missionGroup = new THREE.Group();
-    missionGroup.position.set(0, 0, -2);
-    scene.add(missionGroup);
-    sceneGroups.push(missionGroup);
-
-    const nodeOuter = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(2.2, 1),
-      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, wireframe: true, transparent: true, opacity: 0.6 })
-    );
-    const nodeInner = new THREE.Mesh(
-      new THREE.OctahedronGeometry(0.9),
-      new THREE.MeshBasicMaterial({ color: 0xe8f0ff, wireframe: true })
-    );
-    const core = new THREE.Mesh(
-      new THREE.SphereGeometry(0.45, 32, 32),
-      new THREE.MeshBasicMaterial({ color: 0x5ad7ff })
-    );
-    const halo = new THREE.Mesh(
-      new THREE.SphereGeometry(1.3, 32, 32),
-      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.07, depthWrite: false })
-    );
-    missionGroup.add(nodeOuter, nodeInner, core, halo);
-
-    const missionRing = new THREE.Mesh(
-      new THREE.TorusGeometry(3, 0.01, 8, 200),
-      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.4 })
-    );
-    missionRing.rotation.x = 1.2;
-    missionGroup.add(missionRing);
-
-    const missionDot = new THREE.Mesh(
-      new THREE.SphereGeometry(0.08, 12, 12),
-      new THREE.MeshBasicMaterial({ color: 0xffffff })
-    );
-    missionRing.add(missionDot);
-
-    // =====================================================
-    // SCENE 2: WORLDS — Menara server + sorot cahaya emas
-    // =====================================================
-    const worldsGroup = new THREE.Group();
-    worldsGroup.position.set(0, 0, -1);
-    scene.add(worldsGroup);
-    sceneGroups.push(worldsGroup);
-
-    const tower = new THREE.Group();
-    worldsGroup.add(tower);
-
-    const rackMat = new THREE.MeshStandardMaterial({ color: 0x1a1d24, metalness: 0.7, roughness: 0.35 });
-    const leds = [];
-    for (let i = 0; i < 6; i++) {
-      const block = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.38, 1.6), rackMat);
-      block.position.y = i * 0.5 - 1.25;
-      tower.add(block);
-
-      for (let j = 0; j < 4; j++) {
-        const led = new THREE.Mesh(
-          new THREE.BoxGeometry(0.12, 0.05, 0.02),
-          new THREE.MeshBasicMaterial({ color: 0xffc857, transparent: true, opacity: 0.9 })
-        );
-        led.position.set(-0.5 + j * 0.33, i * 0.5 - 1.15, 0.81);
-        tower.add(led);
-        leds.push(led);
-      }
-    }
-
-    const groundGlow = new THREE.Mesh(
-      new THREE.CircleGeometry(3, 64),
-      new THREE.MeshBasicMaterial({ color: 0xffc857, transparent: true, opacity: 0.06, depthWrite: false })
-    );
-    groundGlow.rotation.x = -Math.PI / 2;
-    groundGlow.position.y = -1.6;
-    worldsGroup.add(groundGlow);
-
-    const spot = new THREE.SpotLight(0xffc857, 4, 40, Math.PI / 7, 0.5, 1.2);
-    spot.position.set(0, 9, 3);
-    spot.target = tower;
-    worldsGroup.add(spot);
-
-    // =====================================================
-    // SCENE 3: TECHNOLOGY — Kartu kaca + gelombang bergerak
-    // =====================================================
-    const techGroup = new THREE.Group();
-    techGroup.position.set(0, 0, -1);
-    scene.add(techGroup);
-    sceneGroups.push(techGroup);
-
-    const cardGeo = new THREE.BoxGeometry(3.6, 2.2, 0.05);
-    const card3D = new THREE.Mesh(
-      cardGeo,
-      new THREE.MeshStandardMaterial({
-        color: 0x0c1424, transparent: true, opacity: 0.6, roughness: 0.2, metalness: 0.2
-      })
-    );
-    techGroup.add(card3D);
-
-    const cardEdges = new THREE.LineSegments(
-      new THREE.EdgesGeometry(cardGeo),
-      new THREE.LineBasicMaterial({ color: 0x5ad7ff, transparent: true, opacity: 0.5 })
-    );
-    techGroup.add(cardEdges);
-
-    const waves = [];
-    for (let k = 0; k < 3; k++) {
-      const N = 120;
-      const geo = new THREE.BufferGeometry();
-      const arr = new Float32Array(N * 3);
-      geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-      const line = new THREE.Line(
-        geo,
-        new THREE.LineBasicMaterial({ color: 0xffb13b, transparent: true, opacity: 0.9 })
-      );
-      techGroup.add(line);
-      waves.push({ geo, k, N });
-    }
-
-    const floatShape = new THREE.Mesh(
-      new THREE.OctahedronGeometry(0.35),
-      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, wireframe: true })
-    );
-    floatShape.position.set(2.6, 1.4, 0.6);
-    techGroup.add(floatShape);
-
-    // =====================================================
-    // SCENE 4: ABOUT — Cincin teal berputar + titik orbit
-    // =====================================================
-    const aboutGroup = new THREE.Group();
-    aboutGroup.position.set(0, 0, -2);
-    scene.add(aboutGroup);
-    sceneGroups.push(aboutGroup);
-
-    const ring1 = new THREE.Mesh(
-      new THREE.TorusGeometry(2.4, 0.015, 8, 200),
-      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.8 })
-    );
-    ring1.rotation.x = 1.1;
-    aboutGroup.add(ring1);
-
-    const ring2 = new THREE.Mesh(
-      new THREE.TorusGeometry(1.8, 0.015, 8, 200),
-      new THREE.MeshBasicMaterial({ color: 0x4fe3c1, transparent: true, opacity: 0.4 })
-    );
-    ring2.rotation.x = Math.PI / 2.4;
-    aboutGroup.add(ring2);
-
-    const aboutDots = [];
-    for (let i = 0; i < 3; i++) {
-      const dot = new THREE.Mesh(
-        new THREE.SphereGeometry(0.07, 12, 12),
-        new THREE.MeshBasicMaterial({ color: 0xffffff })
-      );
-      ring1.add(dot);
-      aboutDots.push(dot);
-    }
-
-    // =====================================================
-    // SCENE 5: CONTACT — Sinyal berdenyut + gelombang riak
-    // =====================================================
-    const contactGroup = new THREE.Group();
-    contactGroup.position.set(0, 0, -2);
-    scene.add(contactGroup);
-    sceneGroups.push(contactGroup);
-
-    const signal = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(1.4, 2),
-      new THREE.MeshBasicMaterial({ color: 0x5ad7ff, wireframe: true, transparent: true, opacity: 0.5 })
-    );
-    contactGroup.add(signal);
-
-    const ripples = [];
-    for (let i = 0; i < 3; i++) {
-      const r = new THREE.Mesh(
-        new THREE.RingGeometry(1.6, 1.64, 128),
-        new THREE.MeshBasicMaterial({
-          color: 0x5ad7ff, transparent: true, opacity: 0,
-          depthWrite: false, side: THREE.DoubleSide
-        })
-      );
-      contactGroup.add(r);
-      ripples.push(r);
-    }
-
-    // Semua scene mulai dari kondisi kecil, hanya scene aktif yang membesar
-    sceneGroups.forEach(g => {
-      g.scale.setScalar(0.0001);
-      g.visible = false;
-    });
-
-    // =====================================================
-    // BINTANG (dua lapisan: jauh & dekat)
-    // =====================================================
-    function makeStars(count, spread, color, size) {
-      const pos = new Float32Array(count * 3);
-      for (let i = 0; i < count * 3; i++) {
-        pos[i] = (Math.random() - 0.5) * spread;
-      }
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      return new THREE.Points(
-        geo,
-        new THREE.PointsMaterial({ color, size, transparent: true, opacity: 0.8, fog: false })
-      );
-    }
-
-    const starsFar = makeStars(1400, 160, 0xffffff, 0.08);
-    const starsNear = makeStars(400, 60, 0x9fdfff, 0.14);
-    scene.add(starsFar, starsNear);
-
-    // =====================================================
-    // SCROLL, SECTION AKTIF, REVEAL
-    // =====================================================
-    const sectionEls = Array.from(document.querySelectorAll('main > section'));
-    let scrollTarget = 0;
-    let scrollCurrent = 0;
-    let activeIndex = 0;
-
-    function updateScroll() {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      scrollTarget = max > 0 ? window.scrollY / max : 0;
-
-      const mid = window.innerHeight / 2;
-      let best = 0;
-      let bestDist = Infinity;
-      sectionEls.forEach((el, i) => {
-        const r = el.getBoundingClientRect();
-        const dist = Math.abs(r.top + r.height / 2 - mid);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = i;
-        }
-      });
-      activeIndex = Math.min(best, sceneGroups.length - 1);
-    }
-    window.addEventListener('scroll', updateScroll, { passive: true });
-
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) e.target.classList.add('in');
-      });
-    }, { threshold: 0.15 });
-    sectionEls.forEach(el => io.observe(el));
-
-    // =====================================================
-    // MOUSE PARALLAX
-    // =====================================================
-    let mouseX = 0;
-    let mouseY = 0;
-    window.addEventListener('pointermove', e => {
-      mouseX = e.clientX / window.innerWidth - 0.5;
-      mouseY = e.clientY / window.innerHeight - 0.5;
-    });
-
-    // =====================================================
-    // RESIZE
-    // =====================================================
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-
-    // =====================================================
-    // LOOP ANIMASI
-    // =====================================================
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
-
-      // Scroll dihaluskan
-      scrollCurrent += (scrollTarget - scrollCurrent) * 0.08;
-
-      // Transisi scene: yang aktif membesar, yang lain mengecil
-      sceneGroups.forEach((g, i) => {
-        const target = i === activeIndex ? 1 : 0.0001;
-        const s = THREE.MathUtils.lerp(g.scale.x, target, 0.06);
-        g.scale.setScalar(Math.max(s, 0.0001));
-        g.visible = s > 0.01;
-      });
-
-      // HERO: planet dan awan berputar, satelit mengorbit
-      earth.rotation.y = t * 0.05;
-      clouds.rotation.y = t * 0.07;
-
-      const a = t * 0.18;
-      satellite.position.set(Math.cos(a) * ORBIT_R, 0, Math.sin(a) * ORBIT_R);
-      satellite.rotation.y = -a;
-      satellite.userData.led.visible = Math.sin(t * 4) > 0;
-
-      // MISSION: node berputar, inti berdenyut, titik berjalan di cincin
-      nodeOuter.rotation.y = t * 0.15;
-      nodeOuter.rotation.x = t * 0.08;
-      nodeInner.rotation.y = -t * 0.3;
-      core.scale.setScalar(1 + Math.sin(t * 2) * 0.06);
-      missionRing.rotation.z = t * 0.1;
-      missionDot.position.set(Math.cos(t * 0.6) * 3, Math.sin(t * 0.6) * 3, 0);
-
-      // WORLDS: menara berputar pelan, LED berkedip bergantian
-      tower.rotation.y = t * 0.12;
-      leds.forEach((led, idx) => {
-        led.material.opacity = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 3 + idx * 0.7));
-      });
-
-      // TECH: kartu bergoyang, gelombang bergerak, bentuk melayang berputar
-      techGroup.rotation.y = Math.sin(t * 0.3) * 0.2;
-      waves.forEach(w => {
-        const pos = w.geo.attributes.position.array;
-        for (let i = 0; i < w.N; i++) {
-          const x = -1.7 + i * (3.4 / (w.N - 1));
-          pos[i * 3] = x;
-          pos[i * 3 + 1] = Math.sin(x * 2 + t * 1.5 + w.k) * 0.3 + (w.k - 1) * 0.35;
-          pos[i * 3 + 2] = 0.04;
-        }
-        w.geo.attributes.position.needsUpdate = true;
-      });
-      floatShape.rotation.x = t * 0.4;
-      floatShape.rotation.y = t * 0.6;
-
-      // ABOUT: cincin berputar, titik berjalan di cincin
-      aboutGroup.rotation.y = t * 0.1;
-      ring1.rotation.z = t * 0.12;
-      ring2.rotation.z = -t * 0.15;
-      aboutDots.forEach((dot, i) => {
-        const ang = t * 0.6 + i * ((Math.PI * 2) / 3);
-        dot.position.set(Math.cos(ang) * 2.4, Math.sin(ang) * 2.4, 0);
-      });
-
-      // CONTACT: sinyal berdenyut, riak melebar lalu memudar
-      signal.rotation.y = t * 0.1;
-      signal.scale.setScalar(1 + Math.sin(t * 2) * 0.05);
-      ripples.forEach((r, i) => {
-        const p = (t * 0.4 + i / ripples.length) % 1;
-        r.scale.setScalar(1 + p * 3);
-        r.material.opacity = (1 - p) * 0.6;
-      });
-
-      // Bintang berputar pelan
-      starsFar.rotation.y = t * 0.01;
-      starsNear.rotation.y = t * 0.02;
-
-      // KAMERA: turun sesuai scroll + ikut kursor
-      const targetX = mouseX * 1.2;
-      const targetY = -scrollCurrent * 3 + mouseY * -0.6;
-      const targetZ = 9 - scrollCurrent * 2;
-      camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.05);
-      camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.08);
-      camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, 0.08);
-      camera.lookAt(0, camera.position.y * 0.5, 0);
-
-      renderer.render(scene, camera);
-    }
-
-    updateScroll();
-    animate();
-  </script>
-</body>
-</html>
