@@ -1,376 +1,257 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#03050a">
-  <meta name="description" content="BRANDO — An immersive interactive universe. Explore worlds beyond the ordinary.">
   <title>BRANDO — Beyond the Ordinary</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css">
-
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
-      }
+    :root {
+      --bg: #03050a;
+      --text: #e8f0ff;
+      --accent: #5ad7ff;
+      --muted: rgba(232, 240, 255, 0.55);
     }
-  </script>
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Canvas 3D tetap di belakang */
+    #scene {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      display: block;
+    }
+
+    /* Logo kecil di atas tengah */
+    .logo {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 14px;
+      letter-spacing: 0.4em;
+      font-weight: 600;
+    }
+
+    /* Konten scroll */
+    main {
+      position: relative;
+      z-index: 5;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .label {
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(40px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-shadow: 0 0 40px rgba(90, 215, 255, 0.25);
+    }
+
+    .sub {
+      margin-top: 22px;
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+    }
+  </style>
 </head>
-
 <body>
-  <div class="loader" id="loader">
-    <div class="loader-logo">BRANDO<span>.</span></div>
-    <div class="loader-progress"><span id="loaderBar"></span></div>
-    <p id="loaderText">PREPARING UNIVERSE</p>
-  </div>
 
-  <div class="cursor-glow" id="cursorGlow"></div>
-  <div class="noise"></div>
+  <canvas id="scene"></canvas>
 
-  <header class="header" id="header">
-    <a href="#home" class="brand">BRANDO<span>.</span></a>
-
-    <nav class="nav" id="nav">
-      <a href="#home" class="nav-link active">HOME</a>
-      <a href="#mission" class="nav-link">MISSION</a>
-      <a href="#worlds" class="nav-link">WORLDS</a>
-      <a href="#technology" class="nav-link">TECHNOLOGY</a>
-      <a href="#about" class="nav-link">ABOUT</a>
-    </nav>
-
-    <a href="#contact" class="header-contact">
-      CONTACT <span>↗</span>
-    </a>
-
-    <button class="menu-button" id="menuButton" aria-label="Toggle menu">
-      <span></span><span></span>
-    </button>
-  </header>
+  <div class="logo">BRANDO.</div>
 
   <main>
-
-    <!-- HERO / 3D EARTH -->
-    <section class="hero" id="home">
-      <div id="spaceScene" class="space-scene"></div>
-
-      <div class="hero-vignette"></div>
-      <div class="hero-grid"></div>
-
-      <div class="hero-copy">
-        <div class="eyebrow reveal">
-          <span class="live-dot"></span>
-          INDEPENDENT DIGITAL UNIVERSE
-        </div>
-
-        <h1 class="hero-heading reveal">
-          BEYOND<br>
-          THE <span>ORDINARY.</span>
-        </h1>
-
-        <p class="hero-description reveal">
-          A new perspective on creativity, technology and the universe.
-          Enter a world where imagination has no boundaries.
-        </p>
-
-        <div class="hero-buttons reveal">
-          <a href="#mission" class="button-primary">
-            EXPLORE THE UNIVERSE <span>↗</span>
-          </a>
-          <a href="#about" class="button-secondary">
-            OUR STORY <span>↓</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="hero-label label-left">
-        <span>PLANETARY SYSTEM</span>
-        <strong>EARTH / 001</strong>
-        <span>ROTATION ACTIVE</span>
-      </div>
-
-      <div class="hero-label label-right">
-        <span>LIVE COORDINATES</span>
-        <strong id="coordinates">000.00 / 000.00</strong>
-        <span>CAMERA TRACKING ENABLED</span>
-      </div>
-
-      <div class="hero-bottom">
-        <span>DRAG TO ROTATE · MOVE CURSOR TO EXPLORE</span>
-        <div class="scroll-cue">
-          SCROLL TO DESCEND
-          <span class="scroll-arrow">↓</span>
-        </div>
-        <span>BR — SYSTEM 001</span>
-      </div>
-
-      <div class="scene-loading" id="sceneLoading">
-        LOADING 3D ENVIRONMENT...
-      </div>
+    <section id="hero">
+      <div class="label">// INDEPENDENT DIGITAL UNIVERSE</div>
+      <h1>BEYOND<br>THE ORDINARY.</h1>
+      <p class="sub">
+        A new perspective on creativity, technology and the universe.
+        Enter a world where imagination has no boundaries.
+      </p>
+      <div class="scroll-hint">SCROLL TO DESCEND ↓</div>
     </section>
 
-    <!-- MISSION -->
-    <section class="mission section" id="mission">
-      <div class="section-heading reveal">
-        <span class="section-index">01 — MISSION</span>
-        <span class="section-note">A DIFFERENT WAY OF SEEING</span>
-      </div>
-
-      <div class="mission-content">
-        <h2 class="mission-title reveal">
-          THE UNIVERSE<br>
-          IS NOT A <span>LIMIT.</span>
-        </h2>
-
-        <div class="mission-text reveal">
-          <p class="large-text">
-            It is an invitation to discover what lies beyond what we already know.
-          </p>
-          <p>
-            BRANDO was built around the idea that the future is not something
-            we simply wait for. It is something we explore, imagine and shape.
-            Every discovery begins with a question. Every possibility begins
-            with curiosity.
-          </p>
-          <p>
-            From digital environments to new creative perspectives, we look
-            beyond the familiar to uncover ideas that challenge the ordinary.
-            This is a space for exploration, experimentation and the freedom
-            to think differently.
-          </p>
-        </div>
-      </div>
-
-      <div class="mission-stats reveal">
-        <div class="stat">
-          <span class="stat-value">∞</span>
-          <span class="stat-label">POSSIBILITIES</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">01</span>
-          <span class="stat-label">UNIVERSE</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">100%</span>
-          <span class="stat-label">CURIOSITY</span>
-        </div>
-        <div class="stat">
-          <span class="stat-value">UNBOUND</span>
-          <span class="stat-label">PERSPECTIVE</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- WORLDS -->
-    <section class="worlds section" id="worlds">
-      <div class="section-heading reveal">
-        <span class="section-index">02 — WORLDS</span>
-        <span class="section-note">EXPLORE THE DIMENSIONS</span>
-      </div>
-
-      <div class="worlds-intro reveal">
-        <h2>THREE PATHS.<br><span>INFINITE DESTINATIONS.</span></h2>
-        <p>
-          Each dimension represents a different way to explore ideas,
-          challenge conventions and discover new possibilities.
-        </p>
-      </div>
-
-      <div class="world-grid">
-
-        <article class="world-card reveal">
-          <div class="world-art art-creation">
-            <div class="art-stars"></div>
-            <div class="art-planet"></div>
-            <div class="art-orbit"></div>
-            <div class="art-number">01</div>
-          </div>
-          <div class="world-meta">
-            <span>DIMENSION / 001</span>
-            <span>CREATIVE SPACE</span>
-          </div>
-          <h3>CREATION</h3>
-          <p>
-            The birthplace of ideas. A dimension dedicated to imagination,
-            original thinking and the freedom to turn abstract concepts
-            into meaningful experiences.
-          </p>
-          <a href="#contact" class="world-link">EXPLORE THIS DIMENSION <span>↗</span></a>
-        </article>
-
-        <article class="world-card reveal">
-          <div class="world-art art-technology">
-            <div class="art-stars"></div>
-            <div class="tech-core"></div>
-            <div class="tech-ring ring-a"></div>
-            <div class="tech-ring ring-b"></div>
-            <div class="art-number">02</div>
-          </div>
-          <div class="world-meta">
-            <span>DIMENSION / 002</span>
-            <span>TECH SYSTEM</span>
-          </div>
-          <h3>INNOVATION</h3>
-          <p>
-            Where imagination meets engineering. Explore new tools,
-            emerging technology and digital systems designed to expand
-            what humans can create.
-          </p>
-          <a href="#technology" class="world-link">EXPLORE THIS DIMENSION <span>↗</span></a>
-        </article>
-
-        <article class="world-card reveal">
-          <div class="world-art art-exploration">
-            <div class="art-stars"></div>
-            <div class="explore-portal"></div>
-            <div class="portal-core"></div>
-            <div class="art-number">03</div>
-          </div>
-          <div class="world-meta">
-            <span>DIMENSION / 003</span>
-            <span>UNKNOWN TERRITORY</span>
-          </div>
-          <h3>EXPLORATION</h3>
-          <p>
-            A journey into the unknown. Discover unfamiliar perspectives,
-            question existing boundaries and approach the future
-            with an open mind.
-          </p>
-          <a href="#contact" class="world-link">EXPLORE THIS DIMENSION <span>↗</span></a>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- TECHNOLOGY -->
-    <section class="technology section" id="technology">
-      <div class="section-heading reveal">
-        <span class="section-index">03 — TECHNOLOGY</span>
-        <span class="section-note">BEHIND THE EXPERIENCE</span>
-      </div>
-
-      <div class="technology-layout">
-        <div class="technology-visual reveal">
-          <div class="tech-grid"></div>
-          <div class="tech-orb">
-            <div class="tech-orb-inner"></div>
-          </div>
-          <div class="tech-circle circle-1"></div>
-          <div class="tech-circle circle-2"></div>
-          <div class="tech-circle circle-3"></div>
-          <div class="tech-cross cross-1"></div>
-          <div class="tech-cross cross-2"></div>
-          <div class="tech-caption">VISUAL ENGINE / BR-03</div>
-        </div>
-
-        <div class="technology-info">
-          <h2 class="reveal">DIGITAL WORLDS.<br><span>REAL INTERACTION.</span></h2>
-          <p class="reveal">
-            Technology is not only a tool for building. It is a medium for
-            creating new experiences. The BRANDO environment combines
-            real-time rendering, responsive motion and layered visuals
-            to transform a simple website into an interactive space.
-          </p>
-
-          <div class="tech-list">
-            <div class="tech-item reveal">
-              <span>01</span>
-              <div>
-                <h4>REAL-TIME 3D</h4>
-                <p>Interactive geometry, lighting and spatial depth rendered in real time.</p>
-              </div>
-            </div>
-            <div class="tech-item reveal">
-              <span>02</span>
-              <div>
-                <h4>GENERATIVE MOTION</h4>
-                <p>Organic movement and smooth transitions that respond to the environment.</p>
-              </div>
-            </div>
-            <div class="tech-item reveal">
-              <span>03</span>
-              <div>
-                <h4>IMMERSIVE INTERFACE</h4>
-                <p>Visual elements designed to create a coherent and engaging digital journey.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section class="about section" id="about">
-      <div class="section-heading reveal">
-        <span class="section-index">04 — ABOUT BRANDO</span>
-        <span class="section-note">AN INDEPENDENT PROJECT</span>
-      </div>
-
-      <div class="about-layout">
-        <div class="about-visual reveal">
-          <div class="about-starfield"></div>
-          <div class="about-planet"></div>
-          <div class="about-ring"></div>
-          <div class="about-crosshair"></div>
-          <span class="about-coordinate">N 42° 09' / E 18° 22'</span>
-        </div>
-
-        <div class="about-copy">
-          <h2 class="reveal">
-            BUILT FOR<br>
-            THE <span>CURIOUS.</span>
-          </h2>
-          <p class="reveal">
-            BRANDO is an independent digital concept exploring the
-            intersection of design, technology and imagination.
-          </p>
-          <p class="reveal">
-            It is a continuously evolving project. A place to experiment
-            with new visual systems, interactive environments and ideas
-            that have yet to find their limits.
-          </p>
-          <p class="reveal">
-            There is no final destination. There is only the next
-            horizon, the next discovery and the next possibility.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section class="contact section" id="contact">
-      <div class="contact-background"></div>
-      <div class="contact-content">
-        <span class="section-index reveal">05 — TRANSMISSION</span>
-        <h2 class="reveal">
-          THE NEXT<br>
-          <span>HORIZON</span><br>
-          STARTS HERE.
-        </h2>
-        <p class="reveal">
-          Every journey begins with curiosity.<br>
-          Send a signal. Let's discover what comes next.
-        </p>
-        <a href="mailto:hello@brando.space" class="contact-button reveal">
-          INITIATE CONTACT <span>↗</span>
-        </a>
-      </div>
-      <div class="contact-coordinate">SIGNAL STATUS / READY</div>
-    </section>
-
+    <!-- Section lain nanti ditambah di langkah berikutnya -->
+    <section style="min-height: 100vh;"></section>
   </main>
 
-  <footer class="footer">
-    <a href="#home" class="brand">BRANDO<span>.</span></a>
-    <div class="footer-center">INDEPENDENT DIGITAL UNIVERSE · 2026</div>
-    <a href="#home" class="footer-top">BACK TO TOP ↑</a>
-  </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // ===== Renderer, scene, kamera =====
+    const canvas = document.getElementById('scene');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x03050a, 1);
 
-  <script type="module" src="script.js"></script>
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x03050a, 0.02);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 9);
+
+    // ===== Lighting =====
+    scene.add(new THREE.AmbientLight(0x404a66, 0.6));
+    const sun = new THREE.DirectionalLight(0xbfe6ff, 1.2);
+    sun.position.set(5, 3, 5);
+    scene.add(sun);
+
+    // ===== Bumi =====
+    const earthGroup = new THREE.Group();
+    scene.add(earthGroup);
+
+    const earth = new THREE.Mesh(
+      new THREE.SphereGeometry(2.2, 64, 64),
+      new THREE.MeshPhongMaterial({
+        color: 0x1a4a8a,
+        emissive: 0x06142e,
+        shininess: 25
+      })
+    );
+    earthGroup.add(earth);
+
+    // Atmosfer (glow biru di luar bumi)
+    const atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(2.35, 64, 64),
+      new THREE.MeshBasicMaterial({
+        color: 0x5ad7ff,
+        transparent: true,
+        opacity: 0.12,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending
+      })
+    );
+    earthGroup.add(atmosphere);
+
+    // Bumi sedikit miring
+    earthGroup.rotation.z = THREE.MathUtils.degToRad(-18);
+    earthGroup.position.set(0, -2.6, 0);
+
+    // ===== Satelit =====
+    const satellite = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(0.4, 0.4, 0.6),
+      new THREE.MeshPhongMaterial({ color: 0xd8dde8, shininess: 80 })
+    );
+    satellite.add(body);
+
+    const panelMat = new THREE.MeshPhongMaterial({
+      color: 0x1b2a5c,
+      emissive: 0x081028,
+      shininess: 120
+    });
+    const panelL = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.04, 0.6), panelMat);
+    panelL.position.x = -0.9;
+    const panelR = panelL.clone();
+    panelR.position.x = 0.9;
+    satellite.add(panelL, panelR);
+
+    satellite.position.set(1.6, 1.4, 1.2);
+    scene.add(satellite);
+
+    // ===== Bintang =====
+    const starCount = 1500;
+    const starPos = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      starPos[i * 3]     = (Math.random() - 0.5) * 120;
+      starPos[i * 3 + 1] = (Math.random() - 0.5) * 120;
+      starPos[i * 3 + 2] = (Math.random() - 0.5) * 120;
+    }
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+    const stars = new THREE.Points(
+      starGeo,
+      new THREE.PointsMaterial({ color: 0xffffff, size: 0.12, transparent: true, opacity: 0.8 })
+    );
+    scene.add(stars);
+
+    // ===== Scroll progress =====
+    let scrollProgress = 0;
+
+    function updateScroll() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      scrollProgress = max > 0 ? window.scrollY / max : 0;
+    }
+    window.addEventListener('scroll', updateScroll, { passive: true });
+
+    // ===== Resize =====
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ===== Loop animasi =====
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      // Bumi berputar pelan
+      earth.rotation.y = t * 0.05;
+
+      // Satelit mengorbit bumi
+      const angle = t * 0.25;
+      satellite.position.set(
+        Math.cos(angle) * 3.2,
+        1.2 + Math.sin(angle * 0.5) * 0.3,
+        Math.sin(angle) * 3.2 - 1
+      );
+      satellite.lookAt(earthGroup.position);
+
+      // Kamera turun pelan sesuai scroll
+      camera.position.y = -scrollProgress * 3;
+      camera.position.z = 9 - scrollProgress * 2;
+      camera.lookAt(0, camera.position.y * 0.5, 0);
+
+      // Bintang berputar pelan
+      stars.rotation.y = t * 0.01;
+
+      renderer.render(scene, camera);
+    }
+
+    updateScroll();
+    animate();
+  </script>
 </body>
 </html>
