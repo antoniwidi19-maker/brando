@@ -50,6 +50,7 @@
     }
 
     section {
+      position: relative;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -92,7 +93,7 @@
       color: var(--muted);
     }
 
-    /* ===== Mission section ===== */
+    /* ===== Mission ===== */
     .section-mission {
       align-items: flex-start;
       text-align: left;
@@ -130,77 +131,4 @@
     }
 
     .stat {
-      border: 1px solid rgba(90, 215, 255, 0.25);
-      background: rgba(90, 215, 255, 0.04);
-      padding: 14px 20px;
-      font-family: "Courier New", monospace;
-      font-size: 12px;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-    }
-  </style>
-</head>
-<body>
-
-  <canvas id="scene"></canvas>
-
-  <div class="logo">BRANDO.</div>
-
-  <main>
-    <section id="hero">
-      <div class="label">// INDEPENDENT DIGITAL UNIVERSE</div>
-      <h1>BEYOND<br>THE ORDINARY.</h1>
-      <p class="sub">
-        A new perspective on creativity, technology and the universe.
-        Enter a world where imagination has no boundaries.
-      </p>
-      <div class="scroll-hint">SCROLL TO DESCEND ↓</div>
-    </section>
-
-    <section class="section-mission" id="mission">
-      <div class="label">01 — MISSION / A DIFFERENT WAY OF SEEING</div>
-      <h2>THE UNIVERSE<br>IS NOT A LIMIT.</h2>
-      <p class="lead">
-        It is an invitation to discover what lies beyond what we already know.
-      </p>
-      <p>
-        BRANDO was built around the idea that the future is not something we simply wait for.
-        It is something we explore, imagine and shape. Every discovery begins with a question.
-        Every possibility begins with curiosity.
-      </p>
-      <p>
-        From digital environments to new creative perspectives, we look beyond the familiar
-        to uncover ideas that challenge the ordinary. This is a space for exploration,
-        experimentation and the freedom to think differently.
-      </p>
-
-      <div class="stats">
-        <div class="stat">∞ POSSIBILITIES</div>
-        <div class="stat">01 UNIVERSE</div>
-        <div class="stat">100% CURIOSITY</div>
-        <div class="stat">UNBOUND PERSPECTIVE</div>
-      </div>
-    </section>
-
-    <!-- Spacer agar kamera 3D punya ruang scroll tambahan -->
-    <section style="min-height: 100vh;"></section>
-  </main>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script>
-    // ===== Renderer, scene, kamera =====
-    const canvas = document.getElementById('scene');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x03050a, 1);
-
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x03050a, 0.02);
-
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 9);
-
-    // ===== Lighting =====
-    scene.add(new THREE.AmbientLight(0x404a66, 0.6));
-    const sun = n
+      border: 1px solid rgba(9
